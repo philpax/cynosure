@@ -1,7 +1,8 @@
 # Cynosure
 ## A x86 emulator
 Because hey, why not?
-Should be cross-platform, but not guaranteed - you will have to create your own Makefiles (there are also some Windows-only features)
+
+Should be cross-platform, but not guaranteed - you will have to create your own Makefiles (there are also some Windows-only features). The project was recently restarted, so there may be remnants of old code used for re-implementation.
 
 ### Implemented:
 * Real mode
