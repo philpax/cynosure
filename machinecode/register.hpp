@@ -77,10 +77,11 @@ struct regCR0
 
 union modRM
 {
-    struct {
-    uint8_t reg1 : 3;
-    uint8_t reg2 : 3;
-    uint8_t mod  : 2;
+    struct 
+    {
+        uint8_t reg1 : 3;
+        uint8_t reg2 : 3;
+        uint8_t mod  : 2;
     };
     uint8_t byte;
     modRM( uint8_t _byte ) : byte(_byte) {};
@@ -88,6 +89,11 @@ union modRM
 
 struct vm_state
 {
+    vm_state( std::string filename, uint32_t memorySize );
+    ~vm_state( );
+
+    void LogRegisters( );
+
     reg32 general[9];
     regCR0 CR0;
     regEFLAGS eflags;
@@ -98,7 +104,7 @@ struct vm_state
     uint8_t *memory;
 
     bool running;
-    std::ofstream *log;
+    std::ofstream log;
 };
 
 #define EAX                             (state->general[0]) // EAX - Accumulator Register
@@ -122,28 +128,27 @@ struct vm_state
 #define FS                              (state->segment[4]) // FS - Extra Extra Segment
 #define GS                              (state->segment[5]) // GS - Extra Extra Extra Segment
 
-static const char *R_Gn16[9] =          { "ax", "cx", "dx", "bx", "sp", "bp", "si", "di", "ip" };
-static const char *R_Gn32[9] =          { "eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi", "eip" };
-static const char *R_Sn[6]   =          { "es", "cs", "ss", "ds", "fs", "gs" };
-static const char *R_LHn[9]  =          { "al", "cl", "dl", "bl", "ah", "ch", "dh", "bh" };
-static const char *R_RCn[8]  =          { "ebx+esi", "ebx+edi", "ebp+esi", "ebp+edi", "esi", "edi", "ebp", "ebx" };
+static const char *R_Gn16[9]  =         { "ax", "cx", "dx", "bx", "sp", "bp", "si", "di", "ip" };
+static const char *R_Gn32[9]  =         { "eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi", "eip" };
+
+static const char *R_Sn[6]    =         { "es", "cs", "ss", "ds", "fs", "gs" };
+static const char *R_LHn[9]   =         { "al", "cl", "dl", "bl", "ah", "ch", "dh", "bh" };
+
+static const char *R_RCn32[8] =         { "ebx+esi", "ebx+edi", "ebp+esi", "ebp+edi", "esi", "edi", "ebp", "ebx" };
+static const char *R_RCn16[8] =         { "bx+si", "bx+di", "bp+si", "bp+di", "si", "di", "bp", "bx" };
 
 #define R_Gn( x )                       (state->CR0.protectedMode ? R_Gn32[(x)] : R_Gn16[(x)])
+#define R_RCn( x )                      (state->CR0.protectedMode ? R_RCn32[(x)] : R_RCn16[(x)])
 
 #define MEMORY( x )                     (state->memory[ (x) ])
 #define SEGMEM( seg, offset )           (((seg)*16) + (offset))
 #define NEXT_INS(i)				    	(MEMORY( EIP.r + (i) ))
 #define CURR_INS						(NEXT_INS(0))
 
-#define LOG_STREAM                      (*(state->log))
+#define LOG_STREAM                      (state->log)
 
 #define R_G(x)                          (state->general[x]) // General register easy access
 #define R_S(x)                          (state->segment[x]) // Segment register easy access
-
-// Converts four 8-bit integers to one 32-bit integer
-#define CONV_8B_TO_32B( a, b, c, d )	((uint32_t)(a) | ((uint32_t)(b) << 8) | ((uint32_t)(c) << 16) | ((uint32_t)(d) << 24))
-// Converts two 8-bit integers to one 16-bit integer
-#define CONV_8B_TO_16B( a, b )          ((uint32_t)(a) | ((uint32_t)(b) << 8))
 
 // Converts the next four 8-bit integers (plus an offset) to one 32-bit integer
 #define ARG_32B( offset )               CONV_8B_TO_32B( NEXT_INS(offset), NEXT_INS(offset+1), NEXT_INS(offset+2), NEXT_INS(offset+3) )
@@ -159,53 +164,9 @@ static const char *R_RCn[8]  =          { "ebx+esi", "ebx+edi", "ebp+esi", "ebp+
 // Converts a memory location to an integer, and outputs a value based on current CPU state
 #define ARG_M( mem )                    (state->CR0.protectedMode ? ARG_32B_M( mem ) : ARG_16B_M( mem ))
 
-static uint8_t &GetLHRegister( vm_state *state, uint8_t index )
-{
-    switch (index)
-    {
-    case 0:
-        return EAX.l;
-    case 1:
-        return ECX.l;
-    case 2:
-        return EDX.l;
-    case 3:
-        return EBX.l;
-    case 4:
-        return EAX.h;
-    case 5:
-        return ECX.h;
-    case 6:
-        return EDX.h;
-    case 7:
-        return EBX.h;
-    };
+// Provides a hexadecimal value with correct padding, etc for printing
+#define PRINT_VALUE( value )            "0x" << std::uppercase << (state->CR0.protectedMode ? std::setw(8) : std::setw(4)) << std::right << std::setfill('0') << (value)
 
-    return EAX.l;
-}
-
-static uint8_t RegisterCombinationToMemoryAddress( vm_state *state, uint8_t value ) // INTEL GODDAMNIT GKJSHgfokjasgb lkjsagklasj;gasgb
-{
-    switch (value)
-    {
-    case 0:
-        return EBX.r + ESI.r;
-    case 1:
-        return EBX.r + EDI.r;
-    case 2:
-        return EBP.r + ESI.r;
-    case 3:
-        return EBP.r + EDI.r;
-    case 4:
-        return ESI.r;
-    case 5:
-        return EDI.r;
-    case 6:
-        return EBP.r;
-    case 7:
-        return EBX.r;
-    };
-
-    return 0;
-}
+uint8_t &GetLHRegister( vm_state *state, uint8_t index ); // 8-bit registers
+uint8_t RegisterCombinationToMemoryAddress( vm_state *state, uint8_t value ); // Sometimes, the opcodes use a custom register operand. This returns the correct value
 #endif

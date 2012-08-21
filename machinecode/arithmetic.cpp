@@ -171,7 +171,7 @@ MAKE_OPCODE(80)
     };
 }
 
-// add/sub/cmp reg, immediate
+// add/sub/cmp reg, imm16/32
 MAKE_OPCODE(81) 
 { 
     modRM mod(NEXT_INS(1)); 
@@ -212,15 +212,17 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[ mod.reg1 ] << ']';
-            arithmetic::Sub( state, MEMORY( SEGMEM(DS.r, GetLHRegister( state, mod.reg1 )) ), NEXT_INS(2) );
+            arithmetic::Sub( state, MEMORY( SEGMEM(DS.r, GetLHRegister( state, mod.reg1 )) ), ARG(2) );
             break;
         case 3:
             LOG_STREAM << R_LHn[ mod.reg1 ];
-            arithmetic::Sub( state, GetLHRegister( state, mod.reg1 ), NEXT_INS(2) );
+            arithmetic::Sub( state, GetLHRegister( state, mod.reg1 ), ARG(2) );
             break;
         };
         break;
     };
+
+    LOG_STREAM << ", " << PRINT_VALUE( ARG(2) );
 }
 
 // rol/ror/rcl/rcr/shl/shr/shl/sar reg, 1

@@ -74,7 +74,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="opcodes.cpp" />
+    <ClCompile Include="register.cpp" />
     <ClCompile Include="string.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="arithmetic.hpp" />

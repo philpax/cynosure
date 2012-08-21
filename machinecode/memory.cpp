@@ -87,7 +87,7 @@ MAKE_OPCODE(89)
     switch(mod.mod)
     {
     case 1:
-        LOG_STREAM << "[" << R_Gn(mod.reg1) << '+' << (int8_t)NEXT_INS(2) << "], " << R_Gn(mod.reg2);
+        LOG_STREAM << "[" << R_Gn(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], " << R_Gn(mod.reg2);
         memory::WriteValueToMemory( state, SEGMEM( DS.r, R_G(mod.reg1).r + (int8_t)NEXT_INS(2) ), R_G(mod.reg2).r );
         op.ins_offset++;
         break;
@@ -106,7 +106,7 @@ MAKE_OPCODE(8A)
     switch(mod.mod)
     {
     case 0:
-        LOG_STREAM << R_LHn[ mod.reg2 ] << ", [" << R_RCn[ mod.reg1 ] << "]";
+        LOG_STREAM << R_LHn[ mod.reg2 ] << ", [" << R_RCn( mod.reg1 ) << "]";
         GetLHRegister( state, mod.reg2 ) = MEMORY( SEGMEM( DS.r, RegisterCombinationToMemoryAddress( state, mod.reg1 ) ) );
         break;
     case 3:
@@ -123,24 +123,24 @@ MAKE_OPCODE(8B) { modRM mod(NEXT_INS(1)); if(mod.mod == 1) { R_G(mod.reg2).r = M
 MAKE_OPCODE(8E) { modRM mod(NEXT_INS(1)); if(mod.mod == 3) { LOG_STREAM << R_Sn[mod.reg2] << ", " << R_Gn(mod.reg1); R_S(mod.reg2).r = R_G(mod.reg1).r; } }
 
 // mov reg8, imm8
-MAKE_OPCODE(B0) { LOG_STREAM << "al, " << (uint32_t)NEXT_INS(1); EAX.l = NEXT_INS(1); }
-MAKE_OPCODE(B1) { LOG_STREAM << "cl, " << (uint32_t)NEXT_INS(1); ECX.l = NEXT_INS(1); }
-MAKE_OPCODE(B2) { LOG_STREAM << "dl, " << (uint32_t)NEXT_INS(1); EDX.l = NEXT_INS(1); }
-MAKE_OPCODE(B3) { LOG_STREAM << "bl, " << (uint32_t)NEXT_INS(1); EBX.l = NEXT_INS(1); }
-MAKE_OPCODE(B4) { LOG_STREAM << "ah, " << (uint32_t)NEXT_INS(1); EAX.h = NEXT_INS(1); }
-MAKE_OPCODE(B5) { LOG_STREAM << "ch, " << (uint32_t)NEXT_INS(1); ECX.h = NEXT_INS(1); }
-MAKE_OPCODE(B6) { LOG_STREAM << "dh, " << (uint32_t)NEXT_INS(1); EDX.h = NEXT_INS(1); }
-MAKE_OPCODE(B7) { LOG_STREAM << "bh, " << (uint32_t)NEXT_INS(1); EBX.h = NEXT_INS(1); }
+MAKE_OPCODE(B0) { LOG_STREAM << "al, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); EAX.l = NEXT_INS(1); }
+MAKE_OPCODE(B1) { LOG_STREAM << "cl, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); ECX.l = NEXT_INS(1); }
+MAKE_OPCODE(B2) { LOG_STREAM << "dl, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); EDX.l = NEXT_INS(1); }
+MAKE_OPCODE(B3) { LOG_STREAM << "bl, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); EBX.l = NEXT_INS(1); }
+MAKE_OPCODE(B4) { LOG_STREAM << "ah, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); EAX.h = NEXT_INS(1); }
+MAKE_OPCODE(B5) { LOG_STREAM << "ch, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); ECX.h = NEXT_INS(1); }
+MAKE_OPCODE(B6) { LOG_STREAM << "dh, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); EDX.h = NEXT_INS(1); }
+MAKE_OPCODE(B7) { LOG_STREAM << "bh, " << PRINT_VALUE( (uint32_t)NEXT_INS(1) ); EBX.h = NEXT_INS(1); }
 
 // mov reg, immediate
-MAKE_OPCODE(B8) { LOG_STREAM << R_Gn(0) << ", " << ARG( 1 ); EAX.r = ARG( 1 ); }
-MAKE_OPCODE(B9) { LOG_STREAM << R_Gn(1) << ", " << ARG( 1 ); ECX.r = ARG( 1 ); }
-MAKE_OPCODE(BA) { LOG_STREAM << R_Gn(2) << ", " << ARG( 1 ); EDX.r = ARG( 1 ); }
-MAKE_OPCODE(BB) { LOG_STREAM << R_Gn(3) << ", " << ARG( 1 ); EBX.r = ARG( 1 ); }
-MAKE_OPCODE(BC) { LOG_STREAM << R_Gn(4) << ", " << ARG( 1 ); ESP.r = ARG( 1 ); }
-MAKE_OPCODE(BD) { LOG_STREAM << R_Gn(5) << ", " << ARG( 1 ); EBP.r = ARG( 1 ); }
-MAKE_OPCODE(BE) { LOG_STREAM << R_Gn(6) << ", " << ARG( 1 ); ESI.r = ARG( 1 ); }
-MAKE_OPCODE(BF) { LOG_STREAM << R_Gn(7) << ", " << ARG( 1 ); EDI.r = ARG( 1 ); }
+MAKE_OPCODE(B8) { LOG_STREAM << R_Gn(0) << ", " << PRINT_VALUE( ARG( 1 ) ); EAX.r = ARG( 1 ); }
+MAKE_OPCODE(B9) { LOG_STREAM << R_Gn(1) << ", " << PRINT_VALUE( ARG( 1 ) ); ECX.r = ARG( 1 ); }
+MAKE_OPCODE(BA) { LOG_STREAM << R_Gn(2) << ", " << PRINT_VALUE( ARG( 1 ) ); EDX.r = ARG( 1 ); }
+MAKE_OPCODE(BB) { LOG_STREAM << R_Gn(3) << ", " << PRINT_VALUE( ARG( 1 ) ); EBX.r = ARG( 1 ); }
+MAKE_OPCODE(BC) { LOG_STREAM << R_Gn(4) << ", " << PRINT_VALUE( ARG( 1 ) ); ESP.r = ARG( 1 ); }
+MAKE_OPCODE(BD) { LOG_STREAM << R_Gn(5) << ", " << PRINT_VALUE( ARG( 1 ) ); EBP.r = ARG( 1 ); }
+MAKE_OPCODE(BE) { LOG_STREAM << R_Gn(6) << ", " << PRINT_VALUE( ARG( 1 ) ); ESI.r = ARG( 1 ); }
+MAKE_OPCODE(BF) { LOG_STREAM << R_Gn(7) << ", " << PRINT_VALUE( ARG( 1 ) ); EDI.r = ARG( 1 ); }
 
 // mov [reg], imm8
 MAKE_OPCODE(C6)
@@ -150,11 +150,11 @@ MAKE_OPCODE(C6)
     switch (mod.mod)
     {
     case 0:
-        LOG_STREAM << "[" << R_G( mod.reg1 ).r << "], " << (uint32_t)NEXT_INS(2);
+        LOG_STREAM << "[" << R_G( mod.reg1 ).r << "], " << PRINT_VALUE( (uint32_t)NEXT_INS(2) );
         memory::WriteValueToMemory( state, R_G( mod.reg1 ).r, NEXT_INS(2) );
         break;
     case 3:
-        LOG_STREAM << R_G( mod.reg1 ).r << ", " << (uint32_t)NEXT_INS(2);
+        LOG_STREAM << R_G( mod.reg1 ).r << ", " << PRINT_VALUE( (uint32_t)NEXT_INS(2) );
         R_G( mod.reg1 ).r = NEXT_INS(2);
         break;
     };    

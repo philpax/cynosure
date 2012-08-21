@@ -1,3 +1,11 @@
 *.o
 *.bin
 *.exe
+*.ilk
+*.pdb
+*.bsc
+*.idb
+*.sdf
+*.opensdf
+/ipch
+/machinecode/Debug
