@@ -1,8 +1,13 @@
 #include "register.hpp"
 #include "opcodes.hpp"
 #include <cstring>
+#include <cstdlib>
 #ifdef _WIN32
     #include <Windows.h>
+#else
+    #include <unistd.h>
+    #include <termios.h>
+    #undef CR0 /* lol wtf */
 #endif
 
 void logRegisters( vm_state *state )
@@ -16,6 +21,11 @@ int main( int argc, char **argv )
 {
 #ifdef _WIN32
     SetConsoleTitle( "Cynosure" );
+#else
+    struct termios termattr;
+    tcgetattr(0, &termattr);
+    termattr.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(0, TCSANOW, &termattr);
 #endif
 
     if (argc < 2)
