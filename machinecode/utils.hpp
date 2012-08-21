@@ -1,7 +1,7 @@
 #ifndef _UTILS_HPP_
 #define _UTILS_HPP_
 
-#include <cstdint>
+#include <stdint.h>
 
 #define IS_BIT_TOGGLED( value, bit )	    ((value & (1 << bit)) >> bit == 1)
 #define TOGGLE_BIT( value, bit )		 (value ^ (1 << bit))
