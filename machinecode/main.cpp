@@ -9,6 +9,9 @@
     #undef CR0
 #endif
 
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
+
 int main( int argc, char **argv )
 {
 #ifdef _WIN32
@@ -37,6 +40,13 @@ int main( int argc, char **argv )
     file.seekg( 0, std::ios::beg );
     file.read( reinterpret_cast<char *>(inst), instLength );
     file.close();
+
+    boost::filesystem::path currentDirectory( boost::filesystem::current_path() );
+
+    for (boost::filesystem::directory_iterator it(currentDirectory); it != boost::filesystem::directory_iterator(); ++it )
+    {
+        //std::cout << it->path().filename().string() << std::endl;
+    }
 
     #ifdef _WIN32
         SetConsoleTitle( ( std::string("Cynosure - running ").append( std::string(argv[1]) ).c_str() ) );

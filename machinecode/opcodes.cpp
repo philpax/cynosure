@@ -90,6 +90,9 @@ void opcodesGenerate( opcode *opcodes )
     // mov sreg, reg
     DECL_OPCODE( 8E, "mov ", 2, 2 );
 
+    // nop
+    DECL_OPCODE( 90, "nop", 1, 1 );
+
     // stosb
     DECL_OPCODE( AA, "stosb ", 1, 1 );
 

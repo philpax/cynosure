@@ -31,6 +31,9 @@ MAKE_OPCODE(74) { LOG_STREAM << PRINT_VALUE( (int32_t)NEXT_INS(1) ); if (EFLAGS.
 // jnz/jne imm8
 MAKE_OPCODE(75) { LOG_STREAM << PRINT_VALUE( (int32_t)NEXT_INS(1) ); if (!EFLAGS.zero) { EIP.r += (int32_t)NEXT_INS(1); } }
 
+// nop
+MAKE_OPCODE(90) { }
+
 // ret
 MAKE_OPCODE(C3) { EIP = memory::Pop( state ); }
 
