@@ -1,5 +1,6 @@
 #include "register.hpp"
 #include "opcodes.hpp"
+#include <cstring>
 #ifdef _WIN32
     #include <Windows.h>
 #endif
