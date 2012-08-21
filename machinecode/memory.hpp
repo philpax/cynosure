@@ -1,7 +1,7 @@
 #ifndef _MEMORY_HPP_
 #define _MEMORY_HPP_
 
-#include <cstdint>
+#include <stdint.h>
 #include "register.hpp"
 #include "opcode_internals.hpp"
 

@@ -1,7 +1,7 @@
 #ifndef _ARITHMETIC_HPP_
 #define _ARITHMETIC_HPP_
 
-#include <cstdint>
+#include <stdint.h>
 #include "register.hpp"
 
 namespace arithmetic
