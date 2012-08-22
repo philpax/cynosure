@@ -1,25 +1,25 @@
 #include "vm_state.hpp"
 #include <boost/foreach.hpp>
 
-vm_state::vm_state( std::string filename, uint32_t memorySize )//, std::vector<std::string> hardDrives ) : memorySize(memorySize)
+vm_state::vm_state( std::string filename, uint32_t memorySize, std::vector<std::string> hardDrives ) : memorySize(memorySize)
 {
     log.open( filename );
     memory = new uint8_t[memorySize];
-    /*BOOST_FOREACH( std::string hd, hardDrives )
+    BOOST_FOREACH( std::string hd, hardDrives )
     {
         std::fstream *file = new std::fstream( hd, std::fstream::in | std::fstream::out | std::fstream::binary );
         HDD.push_back( file );
-    }*/
+    }
 }
 
 vm_state::~vm_state( )
 {
     log << "Shutting down VM!" << std::endl;
-    /*BOOST_FOREACH( std::fstream *hd, HDD )
+    BOOST_FOREACH( std::fstream *hd, HDD )
     {
         hd->close();
     }
-    HDD.clear();*/
+    HDD.clear();
     delete[] memory;
     log.close();
 }

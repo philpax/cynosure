@@ -6,7 +6,7 @@
 
 struct vm_state
 {
-    vm_state( std::string filename, uint32_t memorySize );//, std::vector<std::string> hardDrives );
+    vm_state( std::string filename, uint32_t memorySize, std::vector<std::string> hardDrives );
     ~vm_state( );
 
     void LogRegisters( );
@@ -22,7 +22,7 @@ struct vm_state
 
     bool running;
     std::ofstream log;
-    //std::vector<std::fstream *> HDD;
+    std::vector<std::fstream *> HDD;
 };
 
 #endif

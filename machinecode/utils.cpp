@@ -10,6 +10,8 @@ std::string utils::EscapeCharacter( char input )
         return "\\t";
     case '\r':
         return "\\r";
+    case 8:
+        return "backspace";
     default:
         return std::string( 1, input );
     };

@@ -54,7 +54,7 @@ int main( int argc, char **argv )
         SetConsoleTitle( ( std::string("Cynosure - running ").append( std::string(argv[1]) ).c_str() ) );
     #endif
 
-    vm_state *state = new vm_state("debug.log", 1024 * 1024);//, hardDrives);
+    vm_state *state = new vm_state("debug.log", 1024 * 1024, hardDrives);
 
     if (!LOG_STREAM.is_open())
         return -1;

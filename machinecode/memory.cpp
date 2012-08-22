@@ -37,7 +37,7 @@ void memory::WriteValueToMemory( vm_state *state, uint32_t location, uint32_t va
         state->memory[ESP.r + 3] = d;
     }
 
-    LOG_STREAM << "[MEMORY] Wrote " << value << " to " << location << std::endl;
+    LOG_STREAM << "[MEMORY] Wrote " << value << " to " << location;
 }
 
 // Stack instructions
@@ -47,7 +47,7 @@ void memory::Push( vm_state *state, uint32_t value )
     LOG_STREAM << std::endl;
     WriteValueToMemory( state, ESP.r, value );    
 
-    LOG_STREAM << "[STACK] Pushed: " << value << " to " << ESP.r;
+    LOG_STREAM << std::endl << "[STACK] Pushed: " << value << " to " << ESP.r;
 }
 
 reg32 memory::Pop( vm_state *state )
@@ -150,7 +150,7 @@ MAKE_OPCODE(C6)
     switch (mod.mod)
     {
     case 0:
-        LOG_STREAM << "[" << R_G( mod.reg1 ).r << "], " << PRINT_VALUE( (uint32_t)NEXT_INS(2) );
+        LOG_STREAM << "[" << R_G( mod.reg1 ).r << "], " << PRINT_VALUE( (uint32_t)NEXT_INS(2) ) << std::endl;
         memory::WriteValueToMemory( state, R_G( mod.reg1 ).r, NEXT_INS(2) );
         break;
     case 3:
