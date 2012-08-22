@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "register.hpp"
 #include "arithmetic.hpp"
+#include "vm_state.hpp"
 
 namespace controlflow
 {

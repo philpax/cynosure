@@ -2,7 +2,6 @@
 #define _REGISTER_HPP_
 
 #include <iostream>
-#include <fstream>
 #include <iomanip>
 #include "utils.hpp" // Ugly hack, but can't blame me when I can't be bothered at 3am
 
@@ -87,25 +86,7 @@ union modRM
     modRM( uint8_t _byte ) : byte(_byte) {};
 };
 
-struct vm_state
-{
-    vm_state( std::string filename, uint32_t memorySize );
-    ~vm_state( );
-
-    void LogRegisters( );
-
-    reg32 general[9];
-    regCR0 CR0;
-    regEFLAGS eflags;
-
-    reg16 segment[6];
-
-    uint32_t memorySize;
-    uint8_t *memory;
-
-    bool running;
-    std::ofstream log;
-};
+struct vm_state;
 
 #define EAX                             (state->general[0]) // EAX - Accumulator Register
 #define ECX                             (state->general[1]) // ECX - Counter Register

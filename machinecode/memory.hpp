@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "register.hpp"
 #include "opcode_internals.hpp"
+#include "vm_state.hpp"
 
 namespace memory
 {

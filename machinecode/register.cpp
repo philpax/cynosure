@@ -1,26 +1,5 @@
 #include "register.hpp"
-
-vm_state::vm_state( std::string filename, uint32_t memorySize ) : memorySize(memorySize)
-{
-    log.open( filename );
-    memory = new uint8_t[memorySize];
-}
-
-vm_state::~vm_state( )
-{
-    log << "Shutting down VM and freeing memory" << std::endl;
-    delete[] memory;
-    log.close();
-}
-
-void vm_state::LogRegisters( )
-{
-    vm_state *state = this;
-
-    for (int i = 0; i < 9; i++)
-       LOG_STREAM << R_Gn(i) << ": 0x" << std::uppercase << std::setw(8) << std::right << std::setfill('0') << R_G(i).r << " ";
-    LOG_STREAM << std::endl;
-}
+#include "vm_state.hpp"
 
 uint8_t &GetLHRegister( vm_state *state, uint8_t index )
 {

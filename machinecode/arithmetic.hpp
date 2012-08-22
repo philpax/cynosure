@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "register.hpp"
+#include "vm_state.hpp"
 
 namespace arithmetic
 {

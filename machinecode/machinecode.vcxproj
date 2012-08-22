@@ -67,6 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(BOOST_HOME)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -78,12 +79,12 @@
   <ItemGroup>
     <ClCompile Include="arithmetic.cpp" />
     <ClCompile Include="control_flow.cpp" />
-    <ClCompile Include="dead_code.cpp" />
     <ClCompile Include="interrupt.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="opcodes.cpp" />
     <ClCompile Include="register.cpp" />
+    <ClCompile Include="vm_state.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
@@ -94,6 +95,7 @@
     <ClInclude Include="opcodes.hpp" />
     <ClInclude Include="opcode_internals.hpp" />
     <ClInclude Include="register.hpp" />
+    <ClInclude Include="vm_state.hpp" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

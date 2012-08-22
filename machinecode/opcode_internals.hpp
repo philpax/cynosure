@@ -1,6 +1,8 @@
 #ifndef _OPCODE_INTERNALS_H_
 #define _OPCODE_INTERNALS_H_
 
+#include "vm_state.hpp"
+
 struct opcode;
 
 typedef void (*opcodeFunc)(vm_state *, opcode &);

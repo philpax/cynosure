@@ -1,3 +1,4 @@
+#include "vm_state.hpp"
 #include "register.hpp"
 #include "opcodes.hpp"
 
@@ -42,17 +43,18 @@ int main( int argc, char **argv )
     file.close();
 
     boost::filesystem::path currentDirectory( boost::filesystem::current_path() );
-
+    std::vector<std::string> hardDrives;
     for (boost::filesystem::directory_iterator it(currentDirectory); it != boost::filesystem::directory_iterator(); ++it )
     {
-        //std::cout << it->path().filename().string() << std::endl;
+        if ( it->path().filename().string().find(".fs") != std::string::npos )
+            hardDrives.push_back( it->path().filename().string() );
     }
 
     #ifdef _WIN32
         SetConsoleTitle( ( std::string("Cynosure - running ").append( std::string(argv[1]) ).c_str() ) );
     #endif
 
-    vm_state *state = new vm_state("debug.log", 1024 * 1024);
+    vm_state *state = new vm_state("debug.log", 1024 * 1024);//, hardDrives);
 
     if (!LOG_STREAM.is_open())
         return -1;
@@ -108,7 +110,5 @@ int main( int argc, char **argv )
     }
     
     delete state;
-
-    std::cin.get();
     return 0;
 } 

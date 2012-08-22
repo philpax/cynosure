@@ -27,9 +27,14 @@
    jc .help
 
    mov si, buffer
-   mov di, cmd_boot
+   mov di, cmd_halt
    call strcmp
-   jc .boot
+   jc .halt
+
+   ;mov si, buffer
+   ;mov di, cmd_boot
+   ;call strcmp
+   ;jc .boot   
  
    mov si,badcommand
    call print_string 
@@ -52,6 +57,9 @@
    call print_string
 
    jmp mainloop
+
+ .halt:
+   jmp $
  
  welcome db 'Welcome to My OS!', 0x0D, 0x0A, 0
  msg_helloworld db 'Hello OSDev World!', 0x0D, 0x0A, 0
@@ -60,7 +68,8 @@
  cmd_hi db 'hi', 0
  cmd_help db 'help', 0
  cmd_boot db 'boot', 0
- msg_help db 'My OS: Commands: hi, help', 0x0D, 0x0A, 0
+ cmd_halt db 'halt', 0
+ msg_help db 'My OS: Commands: hi, help, boot, halt', 0x0D, 0x0A, 0
  msg_not_implemented db 'Not implemented!', 0x0D, 0x0A, 0
  buffer times 64 db 0
  
