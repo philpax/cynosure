@@ -29,6 +29,6 @@ void vm_state::LogRegisters( )
     vm_state *state = this;
 
     for (int i = 0; i < 9; i++)
-       LOG_STREAM << R_Gn(i) << ": 0x" << std::uppercase << std::setw(8) << std::right << std::setfill('0') << R_G(i).r << " ";
+       LOG_STREAM << R_Gn(i) << ": " << PRINT_VALUE( R_G(i).r ) << " ";
     LOG_STREAM << std::endl;
 }

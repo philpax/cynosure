@@ -101,11 +101,11 @@ int main( int argc, char **argv )
 
         currOpcode.func( state, currOpcode );
         EIP.r += currOpcode.GetFinalOffset( state );
+        
+        LOG_STREAM << std::endl;
 
 #ifdef LOG_REGISTERS
         state->LogRegisters( );
-#else
-        LOG_STREAM << std::endl;
 #endif
     }
     

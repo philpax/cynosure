@@ -19,6 +19,7 @@
 * mov reg8, reg8 or mov reg8, [reg]
 * mov reg, [reg+disp]
 * mov sreg, reg
+* nop
 * stosb
 * lodsb
 * mov reg8, imm8
