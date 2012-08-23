@@ -37,6 +37,17 @@ MAKE_OPCODE(90) { }
 // ret
 MAKE_OPCODE(C3) { EIP = memory::Pop( state ); }
 
+// jmp seg16:off16
+MAKE_OPCODE(EA)
+{
+    uint16_t segment = ARG_16B(3);
+    uint16_t offset = ARG_16B(1);
+
+    CS.r = segment;
+    EIP.r = SEGMEM( segment, offset );
+    LOG_STREAM << PRINT_VALUE( segment ) << ':' << PRINT_VALUE( offset );
+}
+
 // call imm32
 MAKE_OPCODE(E8) { LOG_STREAM << PRINT_VALUE( (uint32_t)ARG(1) ); memory::Push( state, EIP.r + op.GetOffset( state ) ); EIP.r += ARG(1); LOG_STREAM << std::endl; }
 

@@ -134,6 +134,9 @@ void opcodesGenerate( opcode *opcodes )
     // int imm8
     DECL_OPCODE( CD, "int ", 2, 2 );
 
+    // jmp seg16:off16
+    DECL_OPCODE( EA, "jmp ", 0, 0 );
+
     // call imm16/32
     DECL_OPCODE( E8, "call ", 5, 3 );
 

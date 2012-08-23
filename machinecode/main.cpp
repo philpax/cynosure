@@ -31,15 +31,14 @@ int main( int argc, char **argv )
     }
 
     std::ifstream file;
-    file.open( argv[1], std::ios::in | std::ios::binary | std::ios::ate );
+    file.open( argv[1], std::ios::in | std::ios::binary );
 
     if (!file.is_open())
         return -1;
 
-    uint32_t instLength = (uint32_t)file.tellg();
-    uint8_t *inst = new uint8_t[instLength];
+    uint8_t *inst = new uint8_t[512];
     file.seekg( 0, std::ios::beg );
-    file.read( reinterpret_cast<char *>(inst), instLength );
+    file.read( reinterpret_cast<char *>(inst), 512 );
     file.close();
 
     boost::filesystem::path currentDirectory( boost::filesystem::current_path() );
@@ -60,12 +59,6 @@ int main( int argc, char **argv )
         return -1;
 
     LOG_STREAM << "Cynosure x86 Emulator - compiled " << __DATE__ << " at " << __TIME__ << std::endl;
-    
-    if (instLength < 512)
-    {
-        LOG_STREAM << "[ERROR] Bootsector not large enough, exiting" << std::endl;
-        return -1;
-    }
 
     if ( *(uint16_t *)(inst+510) != 0xAA55 )
     {
@@ -76,7 +69,7 @@ int main( int argc, char **argv )
     LOG_STREAM << "[INIT] Initialized " << state->memorySize << " KB of memory" << std::endl;
     LOG_STREAM << std::hex << std::uppercase << std::setfill('0');
 
-    memcpy( state->memory + 0x7C00, inst, instLength );   
+    memcpy( state->memory + 0x7C00, inst, 512 );   
     LOG_STREAM << "[INIT] Copied bootsector to 0x7C00" << std::endl;
     delete[] inst;
 
