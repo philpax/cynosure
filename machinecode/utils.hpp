@@ -22,6 +22,9 @@
 // Converts two 8-bit integers to one 16-bit integer
 #define CONV_8B_TO_16B( a, b )          ((uint32_t)(a) | ((uint32_t)(b) << 8))
 
+// Provides a hexadecimal value with correct padding, etc for printing
+#define PRINT_VALUE( value )            "0x" << std::hex << std::uppercase << (state->CR0.protectedMode ? std::setw(8) : std::setw(4)) << std::right << std::setfill('0') << (value)
+
 namespace utils
 {
     std::string EscapeCharacter( char input );

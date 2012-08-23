@@ -6,7 +6,11 @@
 
 struct vm_state
 {
-    vm_state( std::string filename, uint32_t memorySize, std::vector<std::string> hardDrives );
+private:
+    void InitializeHDD( );
+    void LoadBootsector( );
+public:
+    vm_state( std::string floppyDisk, std::string logFilename, uint32_t memorySize );
     ~vm_state( );
 
     void LogRegisters( );
@@ -22,6 +26,8 @@ struct vm_state
 
     bool running;
     std::ofstream log;
+
+    std::fstream floppy;
     std::vector<std::fstream *> HDD;
 };
 

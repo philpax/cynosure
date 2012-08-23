@@ -51,7 +51,7 @@
  msg_helloworld db 'Hello OSDev World!', 0x0D, 0x0A, 0
  badcommand db 'Bad command entered.', 0x0D, 0x0A, 0
  prompt db '>', 0
- cmd_boot db 'boot', 0
+ cmd_boot db 'boot_hd0', 0
  cmd_halt db 'halt', 0
  msg_failed db 'Failed to boot!', 0x0D, 0x0A, 0
  buffer times 64 db 0

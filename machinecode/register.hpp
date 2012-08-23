@@ -145,9 +145,6 @@ static const char *R_RCn16[8] =         { "bx+si", "bx+di", "bp+si", "bp+di", "s
 // Converts a memory location to an integer, and outputs a value based on current CPU state
 #define ARG_M( mem )                    (state->CR0.protectedMode ? ARG_32B_M( mem ) : ARG_16B_M( mem ))
 
-// Provides a hexadecimal value with correct padding, etc for printing
-#define PRINT_VALUE( value )            "0x" << std::uppercase << (state->CR0.protectedMode ? std::setw(8) : std::setw(4)) << std::right << std::setfill('0') << (value)
-
 uint8_t &GetLHRegister( vm_state *state, uint8_t index ); // 8-bit registers
 uint8_t RegisterCombinationToMemoryAddress( vm_state *state, uint8_t value ); // Sometimes, the opcodes use a custom register operand. This returns the correct value
 #endif

@@ -17,7 +17,7 @@ MAKE_OPCODE(38)
 }
 
 // cmp al, imm8
-MAKE_OPCODE(3C) { LOG_STREAM << "al " << PRINT_VALUE((int32_t)NEXT_INS(1)); arithmetic::Sub( state, EAX.l, NEXT_INS(1) ); }
+MAKE_OPCODE(3C) { LOG_STREAM << "al, " << PRINT_VALUE((int32_t)NEXT_INS(1)); arithmetic::Sub( state, EAX.l, NEXT_INS(1) ); }
 
 // cmp eax, imm32
 MAKE_OPCODE(3D) { LOG_STREAM << R_Gn(0) << " " << PRINT_VALUE( ARG(1) ); arithmetic::Sub( state, EAX.r, ARG(1) ); }

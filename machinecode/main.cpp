@@ -10,9 +10,6 @@
     #undef CR0
 #endif
 
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
-
 int main( int argc, char **argv )
 {
 #ifdef _WIN32
@@ -24,59 +21,7 @@ int main( int argc, char **argv )
     tcsetattr(0, TCSANOW, &termattr);
 #endif
 
-    if (argc < 2)
-    {
-        std::cerr << "Incorrect number of arguments" << std::endl;
-        return -1;
-    }
-
-    std::ifstream file;
-    file.open( argv[1], std::ios::in | std::ios::binary );
-
-    if (!file.is_open())
-        return -1;
-
-    uint8_t *inst = new uint8_t[512];
-    file.seekg( 0, std::ios::beg );
-    file.read( reinterpret_cast<char *>(inst), 512 );
-    file.close();
-
-    boost::filesystem::path currentDirectory( boost::filesystem::current_path() );
-    std::vector<std::string> hardDrives;
-    for (boost::filesystem::directory_iterator it(currentDirectory); it != boost::filesystem::directory_iterator(); ++it )
-    {
-        if ( it->path().filename().string().find(".fs") != std::string::npos )
-            hardDrives.push_back( it->path().filename().string() );
-    }
-
-    #ifdef _WIN32
-        SetConsoleTitle( ( std::string("Cynosure - running ").append( std::string(argv[1]) ).c_str() ) );
-    #endif
-
-    vm_state *state = new vm_state("debug.log", 1024 * 1024, hardDrives);
-
-    if (!LOG_STREAM.is_open())
-        return -1;
-
-    LOG_STREAM << "Cynosure x86 Emulator - compiled " << __DATE__ << " at " << __TIME__ << std::endl;
-
-    if ( *(uint16_t *)(inst+510) != 0xAA55 )
-    {
-        LOG_STREAM << "[ERROR] Bootsector identifier not found, exiting" << std::endl;
-        return -1;
-    }
-   
-    LOG_STREAM << "[INIT] Initialized " << state->memorySize << " KB of memory" << std::endl;
-    LOG_STREAM << std::hex << std::uppercase << std::setfill('0');
-
-    memcpy( state->memory + 0x7C00, inst, 512 );   
-    LOG_STREAM << "[INIT] Copied bootsector to 0x7C00" << std::endl;
-    delete[] inst;
-
-    EBP.r = 0x00001000;
-    ESP = EBP;
-    EIP.r = 0x7C00;
-
+    vm_state *state = new vm_state( "floppy_1_44.img", "debug.log", 1024 * 1024 );
     state->CR0.protectedMode    = false;
     state->CR0.emulation        = true;
 
@@ -90,16 +35,14 @@ int main( int argc, char **argv )
     {
         opcode currOpcode = opcodes[ CURR_INS ];
 
-        LOG_STREAM << "0x" << std::setw(2) << (uint32_t)currOpcode.opc << ": " << currOpcode.name.c_str();
+        LOG_STREAM << "0x" << std::setw(2) << std::hex << (uint32_t)currOpcode.opc << ": " << currOpcode.name.c_str();
 
         currOpcode.func( state, currOpcode );
         EIP.r += currOpcode.GetFinalOffset( state );
         
         LOG_STREAM << std::endl;
 
-#ifdef LOG_REGISTERS
-        state->LogRegisters( );
-#endif
+        //state->LogRegisters( );
     }
     
     delete state;
