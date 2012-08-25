@@ -24,17 +24,10 @@ vm_state::vm_state( std::string floppyDisk, std::string logFilename, uint32_t me
 vm_state::~vm_state( )
 {
     log << "Shutting down VM!" << std::endl;
-    BOOST_FOREACH( std::fstream *hd, HDD )
-    {
-        hd->close();
-        delete hd;
-    }
-
     HDD.clear();
-    delete[] memory;
 
-    floppy.close();
     log.close();
+    floppy.close();
 }
 
 void vm_state::InitializeHDD( )

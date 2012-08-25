@@ -31,9 +31,6 @@
    jmp mainloop
 
  .boot:
-   mov si, read_packet     ; load packet
-   mov ah, 0x42            ; signal read of hard drive
-   mov dl, 0x80            ; drive number 0 (OR'd with 0x80)
    int 0x13                ; read!
    jc short .error         ; if there was an error, error and go back
    jmp word 0x0800:0x0000  ; otherwise, boot our new code
@@ -55,15 +52,6 @@
  cmd_halt db 'halt', 0
  msg_failed db 'Failed to boot!', 0x0D, 0x0A, 0
  buffer times 64 db 0
-
- read_packet:
-   db 0x10     ; 16 bytes
-   db 0        ; always zero
-   dw 16       ; number of sectors to read
-   dw 0x0000   ; read to 0x0000
-   dw 0x0800   ; segment: 0x0800
-   dd 1        ; read LBA 1
-   dd 0        ; unused because we don't need another 16 bits
  
  ; ================
  ; calls start here
