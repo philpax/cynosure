@@ -31,6 +31,17 @@
    jmp mainloop
 
  .boot:
+   mov ax, 0x0800
+   mov es, ax
+
+   mov ah, 2
+   mov al, 1
+   mov ch, 0
+   mov cl, 2
+   mov dh, 0
+   
+   mov bx, 0
+   mov dl, 0
    int 0x13                ; read!
    jc short .error         ; if there was an error, error and go back
    jmp word 0x0800:0x0000  ; otherwise, boot our new code
@@ -48,7 +59,7 @@
  msg_helloworld db 'Hello OSDev World!', 0x0D, 0x0A, 0
  badcommand db 'Bad command entered.', 0x0D, 0x0A, 0
  prompt db '>', 0
- cmd_boot db 'boot_hd0', 0
+ cmd_boot db 'boot', 0
  cmd_halt db 'halt', 0
  msg_failed db 'Failed to boot!', 0x0D, 0x0A, 0
  buffer times 64 db 0
