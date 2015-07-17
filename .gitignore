@@ -7,11 +7,11 @@
 *.idb
 *.sdf
 *.opensdf
+*.sln
+*.suo
+*.vcxproj
+*.filters
+*.user
 /ipch
 /obj
 /bin
-/*.sln
-/*.suo
-/*.vcxproj
-/*.filters
-/*.user
