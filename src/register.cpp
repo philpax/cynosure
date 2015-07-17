@@ -1,7 +1,7 @@
 #include "register.hpp"
 #include "VMState.hpp"
 
-uint8_t& GetLHRegister(VMState* state, uint8_t index)
+uint8_t& GetRegister8(VMState* state, uint8_t index)
 {
     switch (index)
     {

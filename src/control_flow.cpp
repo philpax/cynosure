@@ -8,11 +8,11 @@ MAKE_OPCODE(38)
     switch (mod.mod)
     {
     case 0:
-        arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))),
-                        GetLHRegister(state, mod.reg2));
+        arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))),
+                        GetRegister8(state, mod.reg2));
         break;
     case 3:
-        arithmetic::Sub(state, GetLHRegister(state, mod.reg1), GetLHRegister(state, mod.reg2));
+        arithmetic::Sub(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
         break;
     };
 }

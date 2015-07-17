@@ -4,6 +4,8 @@
 #include <iomanip>
 #include "utils.hpp"
 
+struct VMState;
+
 typedef uint16_t Register16;
 typedef uint32_t Register32;
 
@@ -24,6 +26,8 @@ inline uint8_t& GetUpperByte(T& value)
 {
     return GetOffsetValue<uint8_t>(value, 1);
 }
+
+uint8_t& GetRegister8(VMState* state, uint8_t index);
 
 struct RegisterEFLAGS
 {
@@ -85,8 +89,6 @@ union ModRM
     }
 };
 
-struct VMState;
-
 #define MEMORY(x) (state->memory[(x)])
 #define SEGMEM(seg, offset) (((seg)*16) + (offset))
 #define NEXT_INS(i) (MEMORY(state->eip + (i)))
@@ -101,9 +103,5 @@ struct VMState;
 // Converts an EIP offset to an integer, and outputs a value based on current CPU state
 #define ARG(offset) state->ReadImmediate(state->eip + offset)
 
-uint8_t& GetLHRegister(VMState* state, uint8_t index);                     // 8-bit registers
-uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value); // Sometimes, the
-                                                                           // opcodes use a custom
-                                                                           // register operand.
-                                                                           // This returns the
-                                                                           // correct value
+// Sometimes, the opcodes use a custom register operand. This returns the correct address for them.
+uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value); 

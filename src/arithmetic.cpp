@@ -174,8 +174,8 @@ MAKE_OPCODE(08)
 {
     ModRM mod(NEXT_INS(1));
     LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
-    GetLHRegister(state, mod.reg1) =
-        arithmetic::Or(state, GetLHRegister(state, mod.reg1), GetLHRegister(state, mod.reg2));
+    GetRegister8(state, mod.reg1) =
+        arithmetic::Or(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
 }
 
 // xor reg8, reg8
@@ -183,8 +183,8 @@ MAKE_OPCODE(30)
 {
     ModRM mod(NEXT_INS(1));
     LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
-    GetLHRegister(state, mod.reg1) =
-        arithmetic::Xor(state, GetLHRegister(state, mod.reg1), GetLHRegister(state, mod.reg2));
+    GetRegister8(state, mod.reg1) =
+        arithmetic::Xor(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
 }
 
 MAKE_OPCODE(40)
@@ -282,13 +282,13 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
-                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
+            MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Add(
+                state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
             LOG_STREAM << state->GetByteRegisterName(mod.reg1);
-            GetLHRegister(state, mod.reg1) =
-                arithmetic::Add(state, GetLHRegister(state, mod.reg1), NEXT_INS(2));
+            GetRegister8(state, mod.reg1) =
+                arithmetic::Add(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
             break;
         };
         break;
@@ -298,13 +298,13 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
-                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
+            MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Sub(
+                state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
             LOG_STREAM << state->GetByteRegisterName(mod.reg1);
-            GetLHRegister(state, mod.reg1) =
-                arithmetic::Sub(state, GetLHRegister(state, mod.reg1), NEXT_INS(2));
+            GetRegister8(state, mod.reg1) =
+                arithmetic::Sub(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
             break;
         };
         break;
@@ -314,12 +314,12 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))),
+            arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))),
                             NEXT_INS(2));
             break;
         case 3:
             LOG_STREAM << state->GetByteRegisterName(mod.reg1);
-            arithmetic::Sub(state, GetLHRegister(state, mod.reg1), NEXT_INS(2));
+            arithmetic::Sub(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
             break;
         };
         break;
@@ -339,13 +339,13 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
-                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), ARG(2));
+            MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Add(
+                state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << state->GetByteRegisterName(mod.reg1);
-            GetLHRegister(state, mod.reg1) =
-                arithmetic::Add(state, GetLHRegister(state, mod.reg1), ARG(2));
+            GetRegister8(state, mod.reg1) =
+                arithmetic::Add(state, GetRegister8(state, mod.reg1), ARG(2));
             break;
         };
         break;
@@ -355,13 +355,13 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
-                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), ARG(2));
+            MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Sub(
+                state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << state->GetByteRegisterName(mod.reg1);
-            GetLHRegister(state, mod.reg1) =
-                arithmetic::Sub(state, GetLHRegister(state, mod.reg1), ARG(2));
+            GetRegister8(state, mod.reg1) =
+                arithmetic::Sub(state, GetRegister8(state, mod.reg1), ARG(2));
             break;
         };
         break;
@@ -371,12 +371,12 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))),
+            arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))),
                             ARG(2));
             break;
         case 3:
             LOG_STREAM << state->GetByteRegisterName(mod.reg1);
-            arithmetic::Sub(state, GetLHRegister(state, mod.reg1), ARG(2));
+            arithmetic::Sub(state, GetRegister8(state, mod.reg1), ARG(2));
             break;
         };
         break;

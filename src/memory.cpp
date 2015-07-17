@@ -97,12 +97,12 @@ MAKE_OPCODE(8A)
     {
     case 0:
         LOG_STREAM << state->GetByteRegisterName(mod.reg2) << ", [" << state->GetRegisterCombinationName(mod.reg1) << "]";
-        GetLHRegister(state, mod.reg2) =
+        GetRegister8(state, mod.reg2) =
             MEMORY(SEGMEM(state->ds, RegisterCombinationToMemoryAddress(state, mod.reg1)));
         break;
     case 3:
         LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
-        GetLHRegister(state, mod.reg1) = GetLHRegister(state, mod.reg2);
+        GetRegister8(state, mod.reg1) = GetRegister8(state, mod.reg2);
         break;
     };
 }
