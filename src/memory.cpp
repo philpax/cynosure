@@ -1,4 +1,5 @@
 #include "opcodes.hpp"
+#include "VMState.hpp"
 
 // push reg
 MAKE_OPCODE(0x50)

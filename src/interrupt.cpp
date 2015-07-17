@@ -1,5 +1,6 @@
 #include "register.hpp"
-#include "opcode_internals.hpp"
+#include "opcodes.hpp"
+#include "VMState.hpp"
 #include <iostream>
 
 #ifdef _WIN32
