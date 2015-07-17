@@ -1,6 +1,9 @@
+align 4
    mov ax, 0x07C0  ; set up segments
    mov ds, ax
    mov es, ax
+
+   mov sp, stack_top
  
    mov si, welcome
    call print_string
@@ -161,3 +164,7 @@
  
 times 510-($-$$) db 0
 dw 0AA55h ; some BIOSes require this signature
+
+stack_bottom:
+times 16384 db 0
+stack_top:
