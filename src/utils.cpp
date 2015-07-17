@@ -1,6 +1,6 @@
 #include "utils.hpp"
 
-std::string utils::EscapeCharacter( char input )
+std::string utils::EscapeCharacter(char input)
 {
     switch (input)
     {
@@ -13,6 +13,6 @@ std::string utils::EscapeCharacter( char input )
     case 8:
         return "backspace";
     default:
-        return std::string( 1, input );
+        return std::string(1, input);
     };
 }

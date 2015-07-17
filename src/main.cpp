@@ -3,17 +3,17 @@
 #include "opcodes.hpp"
 
 #ifdef _WIN32
-    #include <Windows.h>
+#include <Windows.h>
 #else
-    #include <unistd.h>
-    #include <termios.h>
-    #undef CR0
+#include <unistd.h>
+#include <termios.h>
+#undef CR0
 #endif
 
-int main( int argc, char **argv )
+int main(int argc, char** argv)
 {
 #ifdef _WIN32
-    SetConsoleTitle( "Cynosure" );
+    SetConsoleTitle("Cynosure");
 #else
     struct termios termattr;
     tcgetattr(0, &termattr);
@@ -21,30 +21,31 @@ int main( int argc, char **argv )
     tcsetattr(0, TCSANOW, &termattr);
 #endif
 
-    vm_state *state = new vm_state( "floppy_1_44.img", "debug.log", 1024 * 1024 );
-    state->CR0.protectedMode    = false;
-    state->CR0.emulation        = true;
+    vm_state* state = new vm_state("floppy_1_44.img", "debug.log", 1024 * 1024);
+    state->CR0.protectedMode = false;
+    state->CR0.emulation = true;
 
     EFLAGS.direction = false;
 
     opcode opcodes[256];
-    opcodesGenerate( opcodes );
-    
+    opcodesGenerate(opcodes);
+
     state->running = true;
     while (state->running)
     {
-        opcode currOpcode = opcodes[ CURR_INS ];
+        opcode currOpcode = opcodes[CURR_INS];
 
-        LOG_STREAM << "0x" << std::setw(2) << std::hex << (uint32_t)currOpcode.opc << ": " << currOpcode.name.c_str();
+        LOG_STREAM << "0x" << std::setw(2) << std::hex << (uint32_t)currOpcode.opc << ": "
+                   << currOpcode.name.c_str();
 
-        currOpcode.func( state, currOpcode );
-        EIP.r += currOpcode.GetFinalOffset( state );
-        
+        currOpcode.func(state, currOpcode);
+        EIP.r += currOpcode.GetFinalOffset(state);
+
         LOG_STREAM << std::endl;
 
-        //state->LogRegisters( );
+        // state->LogRegisters( );
     }
-    
+
     delete state;
     return 0;
-} 
+}

@@ -8,13 +8,13 @@
 
 namespace controlflow
 {
-    void CallI( uint32_t value );
-    void JumpI( uint32_t value );
-    void JumpIfEqualI( uint8_t value );
-    void CompareEAXI( uint32_t value );
-    
-    void Leave( );
-    void Ret( );
+void CallI(uint32_t value);
+void JumpI(uint32_t value);
+void JumpIfEqualI(uint8_t value);
+void CompareEAXI(uint32_t value);
+
+void Leave();
+void Ret();
 };
 
 #endif

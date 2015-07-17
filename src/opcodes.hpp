@@ -276,5 +276,5 @@ MAKE_OPCODE(FD);
 MAKE_OPCODE(FE);
 MAKE_OPCODE(FF);
 
-void opcodesGenerate( opcode *opcodes );
+void opcodesGenerate(opcode* opcodes);
 #endif
