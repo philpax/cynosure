@@ -34,7 +34,7 @@ struct VMState
             Register32 eip; // EIP - Instruction Pointer
         };
     };
-    
+
     RegisterCR0 CR0;
     RegisterEFLAGS eflags;
 

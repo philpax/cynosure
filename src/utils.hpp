@@ -30,7 +30,7 @@
 
 namespace utils
 {
-std::string EscapeCharacter(char input);
+    std::string EscapeCharacter(char input);
 };
 
 #endif

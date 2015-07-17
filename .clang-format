@@ -9,8 +9,9 @@ AllowShortBlocksOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 IndentCaseLabels: false
-NamespaceIndentation: Inner
+NamespaceIndentation: All
 PointerAlignment: Left
 SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: false
 SpacesInParentheses: false
+AlwaysBreakTemplateDeclarations: true

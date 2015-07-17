@@ -80,8 +80,7 @@ union ModRM
 
     uint8_t byte;
 
-    ModRM(uint8_t _byte) :
-        byte(_byte)
+    ModRM(uint8_t _byte) : byte(_byte)
     {
     }
 };
@@ -132,7 +131,7 @@ static const char* R_RCn16[8] = {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di",
 
 uint8_t& GetLHRegister(VMState* state, uint8_t index);                     // 8-bit registers
 uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value); // Sometimes, the
-                                                                            // opcodes use a custom
-                                                                            // register operand.
-                                                                            // This returns the
-                                                                            // correct value
+                                                                           // opcodes use a custom
+                                                                           // register operand.
+                                                                           // This returns the
+                                                                           // correct value

@@ -272,6 +272,5 @@ MAKE_OPCODE(C7)
     }
 
     uint32_t memAddress = R_G(sib.reg1) + (int32_t)displacement;
-    memory::Write(state, memAddress,
-        ARG(op.GetOffset(state) - (state->CR0.protectedMode ? 4 : 2)));
+    memory::Write(state, memAddress, ARG(op.GetOffset(state) - (state->CR0.protectedMode ? 4 : 2)));
 }

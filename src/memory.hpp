@@ -8,16 +8,16 @@
 
 namespace memory
 {
-void Write(VMState* state, uint32_t location, void const* data, size_t count);
+    void Write(VMState* state, uint32_t location, void const* data, size_t count);
 
-template <typename T>
-void Write(VMState* state, uint32_t location, T const& value)
-{
-	Write(state, location, &value, sizeof(value));
-}
+    template <typename T>
+    void Write(VMState* state, uint32_t location, T const& value)
+    {
+        Write(state, location, &value, sizeof(value));
+    }
 
-void Push(VMState* state, uint32_t value);
-Register32 Pop(VMState* state);
+    void Push(VMState* state, uint32_t value);
+    Register32 Pop(VMState* state);
 };
 
 #endif

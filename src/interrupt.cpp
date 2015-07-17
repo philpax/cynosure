@@ -68,7 +68,8 @@ MAKE_OPCODE(CD)
             break;
         case 0x42: // Read hard drive, extended LBA
         {
-            diskAddressPacket* packet = (diskAddressPacket*)(state->memory + SEGMEM(state->ds, state->esi));
+            diskAddressPacket* packet =
+                (diskAddressPacket*)(state->memory + SEGMEM(state->ds, state->esi));
             LOG_STREAM << std::endl << "INT 0x13 packet:" << std::endl;
             LOG_STREAM << " Size: " << PRINT_VALUE((uint32_t)packet->sizePacket) << std::endl;
             LOG_STREAM << " Sectors to transfer: " << PRINT_VALUE(packet->sectorTransferCount)
