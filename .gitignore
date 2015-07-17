@@ -8,4 +8,10 @@
 *.sdf
 *.opensdf
 /ipch
-/machinecode/Debug
+/obj
+/bin
+/*.sln
+/*.suo
+/*.vcxproj
+/*.filters
+/*.user

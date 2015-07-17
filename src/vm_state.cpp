@@ -1,6 +1,4 @@
 #include "vm_state.hpp"
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 vm_state::vm_state( std::string floppyDisk, std::string logFilename, uint32_t memorySize ) : memorySize(memorySize)
 {
@@ -32,6 +30,7 @@ vm_state::~vm_state( )
 
 void vm_state::InitializeHDD( )
 {
+	/*
     boost::filesystem::path currentDirectory( boost::filesystem::current_path() );
     for (boost::filesystem::directory_iterator it(currentDirectory); it != boost::filesystem::directory_iterator(); ++it )
     {
@@ -41,6 +40,7 @@ void vm_state::InitializeHDD( )
             log << "[INIT] Loaded HDD: " << it->path().filename().string() << std::endl;
         }
     }
+	*/
 }
 
 void vm_state::LoadBootsector( )
