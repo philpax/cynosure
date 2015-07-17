@@ -1,4 +1,5 @@
 #include "VMState.hpp"
+#include <stdexcept>
 
 VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memorySize)
     : memorySize(memorySize)
@@ -6,14 +7,14 @@ VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memor
     log.open(logFilename);
 
     if (!log.is_open())
-        exit(-1);
+        throw std::runtime_error("Failed to open log file");
 
     log << "Cynosure x86 Emulator - compiled " << __DATE__ << " at " << __TIME__ << std::endl;
 
     floppy.open(floppyDisk, std::ios::in | std::ios::binary);
 
     if (!floppy.is_open())
-        exit(-2);
+        throw std::runtime_error("Failed to open floppy");
 
     memory = new uint8_t[memorySize];
     log << "[INIT] Initialized " << memorySize << " KB of memory" << std::endl;
@@ -141,10 +142,7 @@ void VMState::LoadBootsector()
     floppy.read(reinterpret_cast<char*>(bootsector), 512);
 
     if (*reinterpret_cast<uint16_t*>(bootsector + 510) != 0xAA55)
-    {
-        log << "[ERROR] Bootsector identifier not found, exiting" << std::endl;
-        exit(-3);
-    }
+        throw std::runtime_error("Failed to find bootsector identifier");
 
     segment[1] = 0;
     general[8] = 0x7C00;

@@ -21,7 +21,16 @@ int main(int argc, char** argv)
     tcsetattr(0, TCSANOW, &termattr);
 #endif
 
-    VMState* state = new VMState("floppy_1_44.img", "debug.log", 1024 * 1024);
+    VMState* state = nullptr;
+    try
+    {
+        state = new VMState("floppy_1_44.img", "debug.log", 1024 * 1024);
+    }
+    catch (std::exception const& e)
+    {
+        std::cerr << "[INIT] Failed to initialize: " << e.what();
+        return EXIT_FAILURE;
+    }
     state->CR0.protectedMode = false;
     state->CR0.emulation = true;
 
