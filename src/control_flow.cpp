@@ -8,7 +8,7 @@ MAKE_OPCODE(38)
     switch (mod.mod)
     {
     case 0:
-        arithmetic::Sub(state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))),
+        arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))),
                         GetLHRegister(state, mod.reg2));
         break;
     case 3:
@@ -81,7 +81,7 @@ MAKE_OPCODE(EA)
     uint16_t segment = ARG_16B(3);
     uint16_t offset = ARG_16B(1);
 
-    CS = segment;
+    state->cs = segment;
     state->eip = SEGMEM(segment, offset);
     LOG_STREAM << PRINT_VALUE(segment) << ':' << PRINT_VALUE(offset);
 }

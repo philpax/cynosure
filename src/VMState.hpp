@@ -38,7 +38,19 @@ struct VMState
     RegisterCR0 CR0;
     RegisterEFLAGS eflags;
 
-    Register16 segment[6];
+    union
+    {
+        Register16 segment[6];
+        struct
+        {
+            Register16 es; // ES - Extra Segment
+            Register16 cs; // CS - Code Segment
+            Register16 ss; // SS - Stack Segment
+            Register16 ds; // DS - Data Segment
+            Register16 fs; // FS - Extra Extra Segment
+            Register16 gs; // GS - Extra Extra Extra Segment
+        };
+    };
 
     uint32_t memorySize;
     uint8_t* memory;

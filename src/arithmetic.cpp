@@ -282,8 +282,8 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
-                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
+            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
+                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -298,8 +298,8 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
-                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
+            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
+                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -314,7 +314,7 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            arithmetic::Sub(state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))),
+            arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))),
                             NEXT_INS(2));
             break;
         case 3:
@@ -339,8 +339,8 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
-                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), ARG(2));
+            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
+                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -355,8 +355,8 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
-                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), ARG(2));
+            MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
+                state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -371,7 +371,7 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            arithmetic::Sub(state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), ARG(2));
+            arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetLHRegister(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];

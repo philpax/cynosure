@@ -88,13 +88,6 @@ union ModRM
 
 struct VMState;
 
-#define ES (state->segment[0]) // ES - Extra Segment
-#define CS (state->segment[1]) // CS - Code Segment
-#define SS (state->segment[2]) // SS - Stack Segment
-#define DS (state->segment[3]) // DS - Data Segment
-#define FS (state->segment[4]) // FS - Extra Extra Segment
-#define GS (state->segment[5]) // GS - Extra Extra Extra Segment
-
 static const char* R_Gn16[9] = {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di", "ip"};
 static const char* R_Gn32[9] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi", "eip"};
 

@@ -104,7 +104,7 @@ MAKE_OPCODE(89)
     case 1:
         LOG_STREAM << "[" << R_Gn(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
                    << R_Gn(mod.reg2);
-        memory::Write(state, SEGMEM(DS, R_G(mod.reg1) + (int8_t)NEXT_INS(2)), R_G(mod.reg2));
+        memory::Write(state, SEGMEM(state->ds, R_G(mod.reg1) + (int8_t)NEXT_INS(2)), R_G(mod.reg2));
         op.ins_offset++;
         break;
     case 3:
@@ -124,7 +124,7 @@ MAKE_OPCODE(8A)
     case 0:
         LOG_STREAM << R_LHn[mod.reg2] << ", [" << R_RCn(mod.reg1) << "]";
         GetLHRegister(state, mod.reg2) =
-            MEMORY(SEGMEM(DS, RegisterCombinationToMemoryAddress(state, mod.reg1)));
+            MEMORY(SEGMEM(state->ds, RegisterCombinationToMemoryAddress(state, mod.reg1)));
         break;
     case 3:
         LOG_STREAM << R_LHn[mod.reg1] << ", " << R_LHn[mod.reg2];
@@ -140,7 +140,7 @@ MAKE_OPCODE(8B)
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
     {
-        R_G(mod.reg2) = MEMORY(SEGMEM(DS, R_G(mod.reg1) + (int8_t)NEXT_INS(2)));
+        R_G(mod.reg2) = MEMORY(SEGMEM(state->ds, R_G(mod.reg1) + (int8_t)NEXT_INS(2)));
     }
 }
 

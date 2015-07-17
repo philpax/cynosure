@@ -46,7 +46,7 @@ MAKE_OPCODE(CD)
             uint8_t sector = GetLowerByte(state->ecx);
             uint8_t head = GetUpperByte(state->edx);
 
-            uint8_t* addr = (uint8_t*)(state->memory + SEGMEM(ES, state->ebx));
+            uint8_t* addr = (uint8_t*)(state->memory + SEGMEM(state->es, state->ebx));
             // LBA = ((C * HPC) + H) * SPT + S - 1
             uint32_t LBA = ((cylinder * 2) + head) * 18 + sector - 1;
             uint32_t readAmount = sectorCount * 512;
@@ -68,7 +68,7 @@ MAKE_OPCODE(CD)
             break;
         case 0x42: // Read hard drive, extended LBA
         {
-            diskAddressPacket* packet = (diskAddressPacket*)(state->memory + SEGMEM(DS, state->esi));
+            diskAddressPacket* packet = (diskAddressPacket*)(state->memory + SEGMEM(state->ds, state->esi));
             LOG_STREAM << std::endl << "INT 0x13 packet:" << std::endl;
             LOG_STREAM << " Size: " << PRINT_VALUE((uint32_t)packet->sizePacket) << std::endl;
             LOG_STREAM << " Sectors to transfer: " << PRINT_VALUE(packet->sectorTransferCount)
