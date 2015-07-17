@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <fstream>
+#include <memory>
 
 struct VMState
 {
@@ -61,7 +62,7 @@ struct VMState
     std::ofstream log;
 
     std::fstream floppy;
-    std::vector<std::fstream*> HDD;
+    std::vector<std::unique_ptr<std::fstream>> HDD;
 
     // Memory functions
     void Write(uint32_t location, void const* data, size_t count);

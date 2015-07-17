@@ -157,8 +157,10 @@ void VMState::InitializeHDD()
             throw std::runtime_error("Entry in hard_drives is not a string");
 
         auto path = hardDrive.get<std::string>();
-        HDD.push_back(
-            new std::fstream(path, std::fstream::in | std::fstream::out | std::fstream::binary));
+        std::unique_ptr<std::fstream> file(
+            new std::fstream(path, std::ios::in | std::ios::out | std::ios::binary));
+
+        HDD.push_back(std::move(file));
         log << "[INIT] Loaded HDD: " << path << std::endl;
     }
 }

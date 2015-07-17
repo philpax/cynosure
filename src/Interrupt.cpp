@@ -102,7 +102,7 @@ void Int0x13(VMState* state)
         uint8_t* addr = &state->Read<uint8_t>(packet->segmentAddr, packet->offsetAddr);
 
         uint8_t driveNumber = GetLowerByte(state->edx) ^ 0x80;
-        auto hdd = state->HDD[driveNumber];
+        auto hdd = state->HDD[driveNumber].get();
         std::unique_ptr<uint8_t[]> tempStorage(new uint8_t[readAmount]);
         hdd->seekg((packet->startingLBA - 1) * 512);
         hdd->read(reinterpret_cast<char*>(tempStorage.get()), readAmount);

@@ -10,8 +10,6 @@
 #undef CR0
 #endif
 
-#include <memory>
-
 int main(int argc, char** argv)
 {
 #ifdef _WIN32
