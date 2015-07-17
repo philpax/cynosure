@@ -96,12 +96,5 @@ union ModRM
 
 #define Log (state->log)
 
-// Converts the next four 8-bit integers (plus an offset) to one 32-bit integer
-#define ARG_32B(offset) state->Read<int32_t>(state->eip + offset)
-// Converts the next two 8-bit integers (plus an offset) to one 16-bit integer
-#define ARG_16B(offset) state->Read<int16_t>(state->eip + offset)
-// Converts an EIP offset to an integer, and outputs a value based on current CPU state
-#define ARG(offset) state->ReadImmediate(state->eip + offset)
-
 // Sometimes, the opcodes use a custom register operand. This returns the correct address for them.
 uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value); 

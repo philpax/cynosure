@@ -174,43 +174,58 @@ MAKE_OPCODE(0xB7)
 // mov reg, immediate
 MAKE_OPCODE(0xB8)
 {
-    Log << state->GetRegisterName(0) << ", " << PRINT_VALUE(ARG(1));
-    state->eax = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->eax = value;
+    Log << state->GetRegisterName(0) << ", " << PRINT_VALUE(value);
 }
+
 MAKE_OPCODE(0xB9)
 {
-    Log << state->GetRegisterName(1) << ", " << PRINT_VALUE(ARG(1));
-    state->ecx = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->ecx = value;
+    Log << state->GetRegisterName(1) << ", " << PRINT_VALUE(value);
 }
+
 MAKE_OPCODE(0xBA)
 {
-    Log << state->GetRegisterName(2) << ", " << PRINT_VALUE(ARG(1));
-    state->edx = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->edx = value;
+    Log << state->GetRegisterName(2) << ", " << PRINT_VALUE(value);
 }
+
 MAKE_OPCODE(0xBB)
 {
-    Log << state->GetRegisterName(3) << ", " << PRINT_VALUE(ARG(1));
-    state->ebx = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->ebx = value;
+    Log << state->GetRegisterName(3) << ", " << PRINT_VALUE(value);
 }
+
 MAKE_OPCODE(0xBC)
 {
-    Log << state->GetRegisterName(4) << ", " << PRINT_VALUE(ARG(1));
-    state->esp = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->esp = value;
+    Log << state->GetRegisterName(4) << ", " << PRINT_VALUE(value);
 }
+
 MAKE_OPCODE(0xBD)
 {
-    Log << state->GetRegisterName(5) << ", " << PRINT_VALUE(ARG(1));
-    state->ebp = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->ebp = value;
+    Log << state->GetRegisterName(5) << ", " << PRINT_VALUE(value);
 }
+
 MAKE_OPCODE(0xBE)
 {
-    Log << state->GetRegisterName(6) << ", " << PRINT_VALUE(ARG(1));
-    state->esi = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->esi = value;
+    Log << state->GetRegisterName(6) << ", " << PRINT_VALUE(value);
 }
+
 MAKE_OPCODE(0xBF)
 {
-    Log << state->GetRegisterName(7) << ", " << PRINT_VALUE(ARG(1));
-    state->edi = ARG(1);
+    auto value = state->ReadImmediate(state->eip + 1);
+    state->edi = value;
+    Log << state->GetRegisterName(7) << ", " << PRINT_VALUE(value);
 }
 
 // mov [reg], imm8
@@ -236,7 +251,7 @@ MAKE_OPCODE(0xC6)
 MAKE_OPCODE(0xC7)
 {
     ModRM mod(NEXT_INS(1));
-    ModRM sib(NEXT_INS(2)); // this is a bit of a hack, but then x86 is a bit of a hack architecture
+    ModRM sib(NEXT_INS(2));
 
     uint8_t displacement = 0;
     if (mod.mod == 1)
@@ -245,6 +260,12 @@ MAKE_OPCODE(0xC7)
         op.insnOffset++;
     }
 
-    uint32_t memAddress = state->general[sib.reg1] + (int32_t)displacement;
-    state->Write(memAddress, ARG(op.GetOffset(state) - (state->CR0.protectedMode ? 4 : 2)));
+    uint32_t memAddress = state->general[sib.reg1] + static_cast<int32_t>(displacement);
+    auto offset = op.GetOffset(state) - (state->CR0.protectedMode ? 4 : 2);
+    auto immediate = state->ReadImmediate(offset);
+
+    if (state->CR0.protectedMode)
+        state->Write<uint32_t>(memAddress, immediate);
+    else
+        state->Write<uint16_t>(memAddress, immediate);
 }

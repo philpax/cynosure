@@ -76,6 +76,12 @@ struct VMState
         return *reinterpret_cast<T*>(&memory[location]);
     }
 
+    template <typename T>
+    T& Read(uint32_t segment, uint32_t offset)
+    {
+        return *reinterpret_cast<T*>(&memory[segment * 16 + offset]);
+    }
+
     int32_t ReadImmediate(uint32_t location);
 
     void Push(uint32_t value);
