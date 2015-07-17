@@ -89,8 +89,6 @@ union ModRM
     }
 };
 
-#define MEMORY(x) (state->memory[(x)])
-
 #define Log (state->log)
 
 // Sometimes, the opcodes use a custom register operand. This returns the correct address for them.

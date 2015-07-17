@@ -80,8 +80,9 @@ MAKE_OPCODE(0x03)
     ModRM mod(state->ReadIPRelative(1));
     if (mod.mod == 1)
     {
-        state->general[mod.reg2] =
-            arithmetic::Add(state, state->general[mod.reg2], MEMORY(state->general[mod.reg1] + (int8_t)state->ReadIPRelative(2)));
+        auto& lhs = state->general[mod.reg2];
+        auto rhs = state->memory[state->general[mod.reg1] + (int8_t)state->ReadIPRelative(2)];
+        lhs = arithmetic::Add(state, lhs, rhs);
     }
 }
 
