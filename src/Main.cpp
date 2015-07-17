@@ -10,6 +10,8 @@
 #undef CR0
 #endif
 
+#include <memory>
+
 int main(int argc, char** argv)
 {
 #ifdef _WIN32
@@ -21,10 +23,10 @@ int main(int argc, char** argv)
     tcsetattr(0, TCSANOW, &termattr);
 #endif
 
-    VMState* state = nullptr;
+    std::unique_ptr<VMState> state;
     try
     {
-        state = new VMState("floppy_1_44.img", "debug.log", 1024 * 1024);
+        state.reset(new VMState("floppy_1_44.img", "debug.log", 1024 * 1024));
     }
     catch (std::exception const& e)
     {
@@ -44,15 +46,14 @@ int main(int argc, char** argv)
     {
         Opcode opcode = opcodes[state->ReadIPRelative(0)];
 
-        Log << "0x" << std::setw(2) << std::hex << (uint32_t)opcode.opcode << ": "
-                   << opcode.name;
+        Log << "0x" << std::setw(2) << std::hex << std::uppercase
+            << (uint32_t)opcode.opcode << ": " << opcode.name;
 
-        opcode.func(state, opcode);
-        state->eip += opcode.GetFinalOffset(state);
+        opcode.func(state.get(), opcode);
+        state->eip += opcode.GetFinalOffset(state.get());
 
         Log << std::endl;
     }
 
-    delete state;
     return 0;
 }
