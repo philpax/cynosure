@@ -89,20 +89,21 @@ MAKE_OPCODE(EA)
 // call imm32
 MAKE_OPCODE(E8)
 {
-    LOG_STREAM << PRINT_VALUE((uint32_t)ARG(1));
+    int32_t argument = ARG(1);
+
     memory::Push(state, state->eip + op.GetOffset(state));
-    state->eip += ARG(1);
-    LOG_STREAM << std::endl;
+    state->eip += argument;
+    LOG_STREAM << argument << std::endl;
 }
 
 // jmp imm32
 MAKE_OPCODE(E9)
 {
-    if (ARG(1) == -5 || ARG(1) == -3)
-    {
+    int32_t argument = ARG(1);
+
+    if (argument == -5 || argument == -3)
         state->running = false;
-    }
-    LOG_STREAM << PRINT_VALUE((uint32_t)ARG(1));
-    state->eip += ARG(1);
-    LOG_STREAM << std::endl;
+
+    state->eip += argument;
+    LOG_STREAM << argument << std::endl;
 }

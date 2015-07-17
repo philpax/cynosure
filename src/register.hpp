@@ -111,23 +111,11 @@ static const char* R_RCn16[8] = {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di",
 #define R_S(x) (state->segment[x]) // Segment register easy access
 
 // Converts the next four 8-bit integers (plus an offset) to one 32-bit integer
-#define ARG_32B(offset)                                                                            \
-    CONV_8B_TO_32B(NEXT_INS(offset), NEXT_INS(offset + 1), NEXT_INS(offset + 2),                   \
-                   NEXT_INS(offset + 3))
+#define ARG_32B(offset) memory::Read<int32_t>(state, state->eip + offset)
 // Converts the next two 8-bit integers (plus an offset) to one 16-bit integer
-#define ARG_16B(offset) CONV_8B_TO_16B(NEXT_INS(offset), NEXT_INS(offset + 1))
+#define ARG_16B(offset) memory::Read<int16_t>(state, state->eip + offset)
 // Converts an EIP offset to an integer, and outputs a value based on current CPU state
-#define ARG(offset) (state->CR0.protectedMode ? (int32_t)ARG_32B(offset) : (int16_t)ARG_16B(offset))
-
-// Converts the next four 8-bit integers in memory (with a given memory location) to one 32-bit
-// integer
-#define ARG_32B_M(mem)                                                                             \
-    CONV_8B_TO_32B(MEMORY(mem), MEMORY(mem + 1), MEMORY(mem + 2), MEMORY(mem + 3))
-// Converts the next two 8-bit integers in memory (with a given memory location) to one 16-bit
-// integer
-#define ARG_16B_M(mem) CONV_8B_TO_16B(MEMORY(mem), MEMORY(mem + 1))
-// Converts a memory location to an integer, and outputs a value based on current CPU state
-#define ARG_M(mem) (state->CR0.protectedMode ? ARG_32B_M(mem) : ARG_16B_M(mem))
+#define ARG(offset) memory::ReadImmediate(state, state->eip + offset)
 
 uint8_t& GetLHRegister(VMState* state, uint8_t index);                     // 8-bit registers
 uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value); // Sometimes, the

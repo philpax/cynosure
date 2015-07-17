@@ -7,6 +7,14 @@ void memory::Write(VMState* state, uint32_t location, void const* data, size_t c
     LOG_STREAM << "[MEMORY] Wrote " << count << " bytes to " << location;
 }
 
+int32_t memory::ReadImmediate(VMState* state, uint32_t location)
+{
+    if (state->CR0.protectedMode)
+        return Read<int32_t>(state, location);
+    else
+        return Read<int16_t>(state, location);
+}
+
 // Stack instructions
 void memory::Push(VMState* state, uint32_t value)
 {
@@ -17,10 +25,9 @@ void memory::Push(VMState* state, uint32_t value)
     LOG_STREAM << std::endl << "[STACK] Pushed: " << value << " to " << state->esp;
 }
 
-Register32 memory::Pop(VMState* state)
+uint32_t memory::Pop(VMState* state)
 {
-    Register32 value;
-    value = (ARG_M(state->esp));
+    uint32_t value = ReadImmediate(state, state->esp);
     LOG_STREAM << std::endl << "[STACK] Popped: " << value << " from " << state->esp;
     state->esp += (state->CR0.protectedMode ? 4 : 2);
     return value;
