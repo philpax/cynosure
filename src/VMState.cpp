@@ -4,14 +4,16 @@ VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memor
     : memorySize(memorySize)
 {
     log.open(logFilename);
+
     if (!log.is_open())
-        exit(-1); // can't do much if you can't log properly
+        exit(-1);
 
     log << "Cynosure x86 Emulator - compiled " << __DATE__ << " at " << __TIME__ << std::endl;
 
     floppy.open(floppyDisk, std::ios::in | std::ios::binary);
+
     if (!floppy.is_open())
-        exit(-2); // floppy dead? what are we supposed to boot from?
+        exit(-2);
 
     memory = new uint8_t[memorySize];
     log << "[INIT] Initialized " << memorySize << " KB of memory" << std::endl;
@@ -48,11 +50,11 @@ std::fstream::out | std::fstream::binary ) );
 
 void VMState::LoadBootsector()
 {
-    uint8_t* inst = new uint8_t[512];
+    uint8_t bootsector[512];
     floppy.seekp(std::ios::beg);
-    floppy.read(reinterpret_cast<char*>(inst), 512);
+    floppy.read(reinterpret_cast<char*>(bootsector), 512);
 
-    if (*(uint16_t*)(inst + 510) != 0xAA55)
+    if (*reinterpret_cast<uint16_t*>(bootsector + 510) != 0xAA55)
     {
         log << "[ERROR] Bootsector identifier not found, exiting" << std::endl;
         exit(-3);
@@ -60,10 +62,8 @@ void VMState::LoadBootsector()
 
     segment[1].r = 0;
     general[8].r = 0x7C00;
-    memcpy(memory + SEGMEM(segment[1].r, general[8].r), inst, 512);
+    memcpy(memory + SEGMEM(segment[1].r, general[8].r), bootsector, 512);
     log << "[INIT] Succesfully loaded bootsector to 0x0000:0x7C00" << std::endl;
-
-    delete inst;
 }
 
 void VMState::LogRegisters()
