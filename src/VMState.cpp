@@ -104,6 +104,6 @@ void VMState::LogRegisters()
     VMState* state = this;
 
     for (int i = 0; i < 9; i++)
-        LOG_STREAM << R_Gn(i) << ": " << PRINT_VALUE(R_G(i)) << " ";
+        LOG_STREAM << R_Gn(i) << ": " << PRINT_VALUE(state->general[i]) << " ";
     LOG_STREAM << std::endl;
 }

@@ -78,12 +78,12 @@ MAKE_OPCODE(89)
     case 1:
         LOG_STREAM << "[" << R_Gn(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
                    << R_Gn(mod.reg2);
-        state->Write(SEGMEM(state->ds, R_G(mod.reg1) + (int8_t)NEXT_INS(2)), R_G(mod.reg2));
+        state->Write(SEGMEM(state->ds, state->general[mod.reg1] + (int8_t)NEXT_INS(2)), state->general[mod.reg2]);
         op.ins_offset++;
         break;
     case 3:
         LOG_STREAM << R_Gn(mod.reg1) << ", " << R_Gn(mod.reg2);
-        R_G(mod.reg1) = R_G(mod.reg2);
+        state->general[mod.reg1] = state->general[mod.reg2];
         break;
     };
 }
@@ -114,7 +114,7 @@ MAKE_OPCODE(8B)
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
     {
-        R_G(mod.reg2) = MEMORY(SEGMEM(state->ds, R_G(mod.reg1) + (int8_t)NEXT_INS(2)));
+        state->general[mod.reg2] = MEMORY(SEGMEM(state->ds, state->general[mod.reg1] + (int8_t)NEXT_INS(2)));
     }
 }
 
@@ -125,7 +125,7 @@ MAKE_OPCODE(8E)
     if (mod.mod == 3)
     {
         LOG_STREAM << R_Sn[mod.reg2] << ", " << R_Gn(mod.reg1);
-        R_S(mod.reg2) = R_G(mod.reg1);
+        state->segment[mod.reg2] = state->general[mod.reg1];
     }
 }
 
@@ -221,13 +221,13 @@ MAKE_OPCODE(C6)
     switch (mod.mod)
     {
     case 0:
-        LOG_STREAM << "[" << R_G(mod.reg1) << "], " << PRINT_VALUE((uint32_t)NEXT_INS(2))
+        LOG_STREAM << "[" << state->general[mod.reg1] << "], " << PRINT_VALUE((uint32_t)NEXT_INS(2))
                    << std::endl;
-        state->Write(R_G(mod.reg1), NEXT_INS(2));
+        state->Write(state->general[mod.reg1], NEXT_INS(2));
         break;
     case 3:
-        LOG_STREAM << R_G(mod.reg1) << ", " << PRINT_VALUE((uint32_t)NEXT_INS(2));
-        R_G(mod.reg1) = NEXT_INS(2);
+        LOG_STREAM << state->general[mod.reg1] << ", " << PRINT_VALUE((uint32_t)NEXT_INS(2));
+        state->general[mod.reg1] = NEXT_INS(2);
         break;
     };
 }
@@ -245,6 +245,6 @@ MAKE_OPCODE(C7)
         op.ins_offset++;
     }
 
-    uint32_t memAddress = R_G(sib.reg1) + (int32_t)displacement;
+    uint32_t memAddress = state->general[sib.reg1] + (int32_t)displacement;
     state->Write(memAddress, ARG(op.GetOffset(state) - (state->CR0.protectedMode ? 4 : 2)));
 }

@@ -155,7 +155,7 @@ uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
 MAKE_OPCODE(01)
 {
     ModRM mod(NEXT_INS(1));
-    R_G(mod.reg1) = arithmetic::Add(state, R_G(mod.reg1), R_G(mod.reg2));
+    state->general[mod.reg1] = arithmetic::Add(state, state->general[mod.reg1], state->general[mod.reg2]);
 }
 
 // add reg, [reg+disp]
@@ -164,8 +164,8 @@ MAKE_OPCODE(03)
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
     {
-        R_G(mod.reg2) =
-            arithmetic::Add(state, R_G(mod.reg2), MEMORY(R_G(mod.reg1) + (int8_t)NEXT_INS(2)));
+        state->general[mod.reg2] =
+            arithmetic::Add(state, state->general[mod.reg2], MEMORY(state->general[mod.reg1] + (int8_t)NEXT_INS(2)));
     }
 }
 
@@ -392,7 +392,7 @@ MAKE_OPCODE(D1)
     switch (mod.reg2)
     {
     case 4:
-        R_G(mod.reg1) = arithmetic::ShiftLeft(state, R_G(mod.reg1), 1);
+        state->general[mod.reg1] = arithmetic::ShiftLeft(state, state->general[mod.reg1], 1);
         break;
     };
 }
@@ -416,10 +416,10 @@ MAKE_OPCODE(FE)
     switch (mod.reg2)
     {
     case 0:
-        R_G(mod.reg1) = arithmetic::Add(state, mod.reg1, 1);
+        state->general[mod.reg1] = arithmetic::Add(state, mod.reg1, 1);
         break;
     case 1:
-        R_G(mod.reg1) = arithmetic::Sub(state, mod.reg1, 1);
+        state->general[mod.reg1] = arithmetic::Sub(state, mod.reg1, 1);
         break;
     };
 }

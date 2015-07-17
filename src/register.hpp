@@ -107,9 +107,6 @@ static const char* R_RCn16[8] = {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di",
 
 #define LOG_STREAM (state->log)
 
-#define R_G(x) (state->general[x]) // General register easy access
-#define R_S(x) (state->segment[x]) // Segment register easy access
-
 // Converts the next four 8-bit integers (plus an offset) to one 32-bit integer
 #define ARG_32B(offset) state->Read<int32_t>(state->eip + offset)
 // Converts the next two 8-bit integers (plus an offset) to one 16-bit integer
