@@ -154,14 +154,14 @@ uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
 // add reg, reg
 MAKE_OPCODE(01)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     R_G(mod.reg1).r = arithmetic::Add(state, R_G(mod.reg1).r, R_G(mod.reg2).r);
 }
 
 // add reg, [reg+disp]
 MAKE_OPCODE(03)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
     {
         R_G(mod.reg2).r =
@@ -172,7 +172,7 @@ MAKE_OPCODE(03)
 // or reg8, reg8
 MAKE_OPCODE(08)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     LOG_STREAM << R_LHn[mod.reg1] << ", " << R_LHn[mod.reg2];
     GetLHRegister(state, mod.reg1) =
         arithmetic::Or(state, GetLHRegister(state, mod.reg1), GetLHRegister(state, mod.reg2));
@@ -181,7 +181,7 @@ MAKE_OPCODE(08)
 // xor reg8, reg8
 MAKE_OPCODE(30)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     LOG_STREAM << R_LHn[mod.reg1] << ", " << R_LHn[mod.reg2];
     GetLHRegister(state, mod.reg1) =
         arithmetic::Xor(state, GetLHRegister(state, mod.reg1), GetLHRegister(state, mod.reg2));
@@ -272,7 +272,7 @@ MAKE_OPCODE(4F)
 // add/sub/cmp reg8, imm8
 MAKE_OPCODE(80)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
 
     switch (mod.reg2)
     {
@@ -329,7 +329,7 @@ MAKE_OPCODE(80)
 // add/sub/cmp reg, imm16/32
 MAKE_OPCODE(81)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
 
     switch (mod.reg2)
     {
@@ -387,7 +387,7 @@ MAKE_OPCODE(81)
 // rol/ror/rcl/rcr/shl/shr/shl/sar reg, 1
 MAKE_OPCODE(D1)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     switch (mod.reg2)
     {
     case 4:
@@ -411,7 +411,7 @@ MAKE_OPCODE(F9)
 // inc/dec cl
 MAKE_OPCODE(FE)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     switch (mod.reg2)
     {
     case 0:

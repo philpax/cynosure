@@ -15,7 +15,7 @@ void ConvTo8B(VMState* state, uint32_t value, uint8_t& a, uint8_t& b, uint8_t& c
 void WriteValueToMemory(VMState* state, uint32_t location, uint32_t value);
 
 void Push(VMState* state, uint32_t value);
-reg32 Pop(VMState* state);
+Register32 Pop(VMState* state);
 };
 
 #endif

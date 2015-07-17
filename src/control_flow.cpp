@@ -4,7 +4,7 @@
 // cmp reg8, reg8
 MAKE_OPCODE(38)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     switch (mod.mod)
     {
     case 0:

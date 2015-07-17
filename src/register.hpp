@@ -1,11 +1,10 @@
-#ifndef _REGISTER_HPP_
-#define _REGISTER_HPP_
+#pragma once
 
 #include <iostream>
 #include <iomanip>
-#include "utils.hpp" // Ugly hack, but can't blame me when I can't be bothered at 3am
+#include "utils.hpp"
 
-union reg16
+union Register16
 {
     struct
     {
@@ -16,7 +15,7 @@ union reg16
     uint16_t r;
 };
 
-union reg32
+union Register32
 {
     struct
     {
@@ -26,11 +25,19 @@ union reg32
 
     uint16_t r16;
     uint32_t r;
-    reg32() : r(0){};
-    reg32(uint8_t _r) : r(_r){};
+
+    Register32() :
+        r(0)
+    {
+    }
+
+    Register32(uint8_t _r) :
+        r(_r)
+    {
+    }
 };
 
-struct regEFLAGS
+struct RegisterEFLAGS
 {
     bool carry : 1;
     bool _pad1 : 1;
@@ -56,7 +63,7 @@ struct regEFLAGS
     uint32_t _pad5 : 11;
 };
 
-struct regCR0
+struct RegisterCR0
 {
     bool protectedMode : 1;
     bool monitorCoProcessor : 1;
@@ -74,7 +81,7 @@ struct regCR0
     bool paging : 1;
 };
 
-union modRM
+union ModRM
 {
     struct
     {
@@ -82,8 +89,13 @@ union modRM
         uint8_t reg2 : 3;
         uint8_t mod : 2;
     };
+
     uint8_t byte;
-    modRM(uint8_t _byte) : byte(_byte){};
+
+    ModRM(uint8_t _byte) :
+        byte(_byte)
+    {
+    }
 };
 
 struct VMState;
@@ -157,4 +169,3 @@ uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value); // So
                                                                             // register operand.
                                                                             // This returns the
                                                                             // correct value
-#endif

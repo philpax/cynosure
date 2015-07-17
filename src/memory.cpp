@@ -51,9 +51,9 @@ void memory::Push(VMState* state, uint32_t value)
     LOG_STREAM << std::endl << "[STACK] Pushed: " << value << " to " << ESP.r;
 }
 
-reg32 memory::Pop(VMState* state)
+Register32 memory::Pop(VMState* state)
 {
-    reg32 value;
+    Register32 value;
     value.r = (ARG_M(ESP.r));
     LOG_STREAM << std::endl << "[STACK] Popped: " << value.r << " from " << ESP.r;
     ESP.r += (state->CR0.protectedMode ? 4 : 2);
@@ -131,7 +131,7 @@ MAKE_OPCODE(5F)
 // mov reg, reg OR mov [reg+disp], reg
 MAKE_OPCODE(89)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
 
     switch (mod.mod)
     {
@@ -152,7 +152,7 @@ MAKE_OPCODE(89)
 // mov reg8, reg8 or mov reg8, [reg]
 MAKE_OPCODE(8A)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
 
     switch (mod.mod)
     {
@@ -172,7 +172,7 @@ MAKE_OPCODE(8A)
 // intel?)
 MAKE_OPCODE(8B)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
     {
         R_G(mod.reg2).r = MEMORY(SEGMEM(DS.r, R_G(mod.reg1).r + (int8_t)NEXT_INS(2)));
@@ -182,7 +182,7 @@ MAKE_OPCODE(8B)
 // mov sreg, reg
 MAKE_OPCODE(8E)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
     if (mod.mod == 3)
     {
         LOG_STREAM << R_Sn[mod.reg2] << ", " << R_Gn(mod.reg1);
@@ -277,7 +277,7 @@ MAKE_OPCODE(BF)
 // mov [reg], imm8
 MAKE_OPCODE(C6)
 {
-    modRM mod(NEXT_INS(1));
+    ModRM mod(NEXT_INS(1));
 
     switch (mod.mod)
     {
@@ -296,8 +296,8 @@ MAKE_OPCODE(C6)
 // mov [reg+disp], imm16/32
 MAKE_OPCODE(C7)
 {
-    modRM mod(NEXT_INS(1));
-    modRM sib(NEXT_INS(2)); // this is a bit of a hack, but then x86 is a bit of a hack architecture
+    ModRM mod(NEXT_INS(1));
+    ModRM sib(NEXT_INS(2)); // this is a bit of a hack, but then x86 is a bit of a hack architecture
 
     uint8_t displacement = 0;
     if (mod.mod == 1)

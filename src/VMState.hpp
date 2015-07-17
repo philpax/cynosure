@@ -16,11 +16,11 @@ struct VMState
 
     void LogRegisters();
 
-    reg32 general[9];
-    regCR0 CR0;
-    regEFLAGS eflags;
+    Register32 general[9];
+    RegisterCR0 CR0;
+    RegisterEFLAGS eflags;
 
-    reg16 segment[6];
+    Register16 segment[6];
 
     uint32_t memorySize;
     uint8_t* memory;
