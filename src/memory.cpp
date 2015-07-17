@@ -15,7 +15,7 @@ void memory::Conv16BTo8B(uint16_t value, uint8_t& a, uint8_t& b)
     b = (uint8_t)(value >> 8);
 }
 
-void memory::ConvTo8B(vm_state* state, uint32_t value, uint8_t& a, uint8_t& b, uint8_t& c,
+void memory::ConvTo8B(VMState* state, uint32_t value, uint8_t& a, uint8_t& b, uint8_t& c,
                       uint8_t& d)
 {
     if (state->CR0.protectedMode)
@@ -24,7 +24,7 @@ void memory::ConvTo8B(vm_state* state, uint32_t value, uint8_t& a, uint8_t& b, u
         memory::Conv16BTo8B((uint16_t)value, a, b);
 }
 
-void memory::WriteValueToMemory(vm_state* state, uint32_t location, uint32_t value)
+void memory::WriteValueToMemory(VMState* state, uint32_t location, uint32_t value)
 {
     uint8_t a, b, c, d;
     ConvTo8B(state, value, a, b, c, d);
@@ -42,7 +42,7 @@ void memory::WriteValueToMemory(vm_state* state, uint32_t location, uint32_t val
 }
 
 // Stack instructions
-void memory::Push(vm_state* state, uint32_t value)
+void memory::Push(VMState* state, uint32_t value)
 {
     ESP.r -= (state->CR0.protectedMode ? 4 : 2);
     LOG_STREAM << std::endl;
@@ -51,7 +51,7 @@ void memory::Push(vm_state* state, uint32_t value)
     LOG_STREAM << std::endl << "[STACK] Pushed: " << value << " to " << ESP.r;
 }
 
-reg32 memory::Pop(vm_state* state)
+reg32 memory::Pop(VMState* state)
 {
     reg32 value;
     value.r = (ARG_M(ESP.r));

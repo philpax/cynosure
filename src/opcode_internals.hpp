@@ -1,12 +1,12 @@
 #ifndef _OPCODE_INTERNALS_H_
 #define _OPCODE_INTERNALS_H_
 
-#include "vm_state.hpp"
+#include "VMState.hpp"
 
 struct opcode;
 
-typedef void (*opcodeFunc)(vm_state*, opcode&);
-#define MAKE_OPCODE(opc) void OP##_##opc(vm_state* state, opcode& op)
+typedef void (*opcodeFunc)(VMState*, opcode&);
+#define MAKE_OPCODE(opc) void OP##_##opc(VMState* state, opcode& op)
 #define DECL_OPCODE(opc, name, offset32, offset16)                                                 \
     opcodes[0x##opc] = opcode(OP##_##opc, 0x##opc, name, offset32, offset16)
 
@@ -19,7 +19,7 @@ struct opcode
     uint8_t offset16;   // 16 bit translation
     uint8_t ins_offset; // EIP translation: for when this particular opcode needs a different
                         // translation
-    uint8_t GetOffset(vm_state* state)
+    uint8_t GetOffset(VMState* state)
     {
         if (state->CR0.protectedMode)
         {
@@ -30,7 +30,7 @@ struct opcode
             return offset16 + ins_offset;
         }
     }
-    uint8_t GetFinalOffset(vm_state* state)
+    uint8_t GetFinalOffset(VMState* state)
     {
         uint8_t offset = GetOffset(state);
         ins_offset = 0;

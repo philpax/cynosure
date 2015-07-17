@@ -86,7 +86,7 @@ union modRM
     modRM(uint8_t _byte) : byte(_byte){};
 };
 
-struct vm_state;
+struct VMState;
 
 #define EAX (state->general[0]) // EAX - Accumulator Register
 #define ECX (state->general[1]) // ECX - Counter Register
@@ -151,8 +151,8 @@ static const char* R_RCn16[8] = {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di",
 // Converts a memory location to an integer, and outputs a value based on current CPU state
 #define ARG_M(mem) (state->CR0.protectedMode ? ARG_32B_M(mem) : ARG_16B_M(mem))
 
-uint8_t& GetLHRegister(vm_state* state, uint8_t index);                     // 8-bit registers
-uint8_t RegisterCombinationToMemoryAddress(vm_state* state, uint8_t value); // Sometimes, the
+uint8_t& GetLHRegister(VMState* state, uint8_t index);                     // 8-bit registers
+uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value); // Sometimes, the
                                                                             // opcodes use a custom
                                                                             // register operand.
                                                                             // This returns the

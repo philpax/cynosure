@@ -1,4 +1,4 @@
-#include "vm_state.hpp"
+#include "VMState.hpp"
 #include "register.hpp"
 #include "opcodes.hpp"
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     tcsetattr(0, TCSANOW, &termattr);
 #endif
 
-    vm_state* state = new vm_state("floppy_1_44.img", "debug.log", 1024 * 1024);
+    VMState* state = new VMState("floppy_1_44.img", "debug.log", 1024 * 1024);
     state->CR0.protectedMode = false;
     state->CR0.emulation = true;
 
@@ -42,8 +42,6 @@ int main(int argc, char** argv)
         EIP.r += currOpcode.GetFinalOffset(state);
 
         LOG_STREAM << std::endl;
-
-        // state->LogRegisters( );
     }
 
     delete state;

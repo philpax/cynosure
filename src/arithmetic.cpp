@@ -1,7 +1,7 @@
 #include "arithmetic.hpp"
 #include "memory.hpp"
 
-uint32_t arithmetic::Add(vm_state* state, uint32_t a, uint32_t b)
+uint32_t arithmetic::Add(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a + b;
     if (value == 0)
@@ -24,7 +24,7 @@ uint32_t arithmetic::Add(vm_state* state, uint32_t a, uint32_t b)
     return value;
 }
 
-uint32_t arithmetic::Sub(vm_state* state, uint32_t a, uint32_t b)
+uint32_t arithmetic::Sub(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a - b;
     if (value == 0)
@@ -47,7 +47,7 @@ uint32_t arithmetic::Sub(vm_state* state, uint32_t a, uint32_t b)
     return value;
 }
 
-uint32_t arithmetic::And(vm_state* state, uint32_t a, uint32_t b)
+uint32_t arithmetic::And(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a & b;
     if (value == 0)
@@ -73,7 +73,7 @@ uint32_t arithmetic::And(vm_state* state, uint32_t a, uint32_t b)
     return value;
 }
 
-uint32_t arithmetic::Or(vm_state* state, uint32_t a, uint32_t b)
+uint32_t arithmetic::Or(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a | b;
     if (value == 0)
@@ -99,7 +99,7 @@ uint32_t arithmetic::Or(vm_state* state, uint32_t a, uint32_t b)
     return value;
 }
 
-uint32_t arithmetic::Xor(vm_state* state, uint32_t a, uint32_t b)
+uint32_t arithmetic::Xor(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a ^ b;
     if (value == 0)
@@ -125,7 +125,7 @@ uint32_t arithmetic::Xor(vm_state* state, uint32_t a, uint32_t b)
     return value;
 }
 
-uint32_t arithmetic::ShiftLeft(vm_state* state, uint32_t a, uint32_t b)
+uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a << b;
     if (value == 0)

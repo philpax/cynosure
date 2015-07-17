@@ -1,6 +1,6 @@
 #include "register.hpp"
 #include "opcode_internals.hpp"
-#include "vm_state.hpp"
+#include "VMState.hpp"
 
 MAKE_OPCODE(AA)
 {

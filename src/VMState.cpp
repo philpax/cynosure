@@ -1,6 +1,6 @@
-#include "vm_state.hpp"
+#include "VMState.hpp"
 
-vm_state::vm_state(std::string floppyDisk, std::string logFilename, uint32_t memorySize)
+VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memorySize)
     : memorySize(memorySize)
 {
     log.open(logFilename);
@@ -20,7 +20,7 @@ vm_state::vm_state(std::string floppyDisk, std::string logFilename, uint32_t mem
     LoadBootsector();
 }
 
-vm_state::~vm_state()
+VMState::~VMState()
 {
     log << "Shutting down VM!" << std::endl;
     HDD.clear();
@@ -29,7 +29,7 @@ vm_state::~vm_state()
     floppy.close();
 }
 
-void vm_state::InitializeHDD()
+void VMState::InitializeHDD()
 {
     /*
 boost::filesystem::path currentDirectory( boost::filesystem::current_path() );
@@ -46,7 +46,7 @@ std::fstream::out | std::fstream::binary ) );
     */
 }
 
-void vm_state::LoadBootsector()
+void VMState::LoadBootsector()
 {
     uint8_t* inst = new uint8_t[512];
     floppy.seekp(std::ios::beg);
@@ -66,9 +66,9 @@ void vm_state::LoadBootsector()
     delete inst;
 }
 
-void vm_state::LogRegisters()
+void VMState::LogRegisters()
 {
-    vm_state* state = this;
+    VMState* state = this;
 
     for (int i = 0; i < 9; i++)
         LOG_STREAM << R_Gn(i) << ": " << PRINT_VALUE(R_G(i).r) << " ";

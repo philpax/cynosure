@@ -1,18 +1,18 @@
-#ifndef _VM_STATE_HPP_
-#define _VM_STATE_HPP_
+#pragma once
+
 #include "register.hpp"
 #include <vector>
 #include <fstream>
 
-struct vm_state
+struct VMState
 {
   private:
     void InitializeHDD();
     void LoadBootsector();
 
   public:
-    vm_state(std::string floppyDisk, std::string logFilename, uint32_t memorySize);
-    ~vm_state();
+    VMState(std::string floppyDisk, std::string logFilename, uint32_t memorySize);
+    ~VMState();
 
     void LogRegisters();
 
@@ -31,5 +31,3 @@ struct vm_state
     std::fstream floppy;
     std::vector<std::fstream*> HDD;
 };
-
-#endif

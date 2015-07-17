@@ -1,7 +1,7 @@
 #include "register.hpp"
-#include "vm_state.hpp"
+#include "VMState.hpp"
 
-uint8_t& GetLHRegister(vm_state* state, uint8_t index)
+uint8_t& GetLHRegister(VMState* state, uint8_t index)
 {
     switch (index)
     {
@@ -26,7 +26,7 @@ uint8_t& GetLHRegister(vm_state* state, uint8_t index)
     return EAX.l;
 }
 
-uint8_t RegisterCombinationToMemoryAddress(vm_state* state, uint8_t value)
+uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value)
 {
     switch (value)
     {
