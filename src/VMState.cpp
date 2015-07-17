@@ -28,8 +28,9 @@ VMState::~VMState()
     log << "Shutting down VM!" << std::endl;
     HDD.clear();
 
-    log.close();
+    delete[] memory;
     floppy.close();
+    log.close();
 }
 
 char const* VMState::GetByteRegisterName(uint8_t index)
