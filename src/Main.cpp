@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     }
     catch (std::exception const& e)
     {
-        std::cerr << "[INIT] Failed to initialize: " << e.what();
+        std::cerr << "[INIT] Failed to initialize: " << e.what() << "\n";
         return EXIT_FAILURE;
     }
     state->CR0.protectedMode = false;

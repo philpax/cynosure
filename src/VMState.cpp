@@ -11,6 +11,16 @@ VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memor
 
     log << "Cynosure x86 Emulator - compiled " << __DATE__ << " at " << __TIME__ << std::endl;
 
+    std::fstream config("config.json");
+    if (!config.is_open())
+        throw std::runtime_error("Failed to open config");
+
+    std::string jsonError;
+    std::istream_iterator<char> input(config);
+    picojson::parse(config_, input, std::istream_iterator<char>(), &jsonError);
+    if (!jsonError.empty())
+        throw std::runtime_error(jsonError);
+
     floppy.open(floppyDisk, std::ios::in | std::ios::binary);
 
     if (!floppy.is_open())
@@ -126,19 +136,31 @@ uint32_t VMState::Pop()
 
 void VMState::InitializeHDD()
 {
-    /*
-boost::filesystem::path currentDirectory( boost::filesystem::current_path() );
-for (boost::filesystem::directory_iterator it(currentDirectory); it !=
-boost::filesystem::directory_iterator(); ++it )
-{
-    if ( it->path().filename().string().find(".fs") != std::string::npos )
+    if (!config_.is<picojson::object>())
+        return;
+
+    auto config = config_.get<picojson::object>();
+
+    if (config.find("hard_drives") == config.end())
+        return;
+
+    auto hardDrives = config["hard_drives"];
+
+    if (!hardDrives.is<picojson::array>())
+        throw std::runtime_error("hard_drives is not an array");
+
+    auto hardDrivesArray = hardDrives.get<picojson::array>();
+
+    for (auto hardDrive : hardDrivesArray)
     {
-        HDD.push_back( new std::fstream( it->path().filename().string(), std::fstream::in |
-std::fstream::out | std::fstream::binary ) );
-        log << "[INIT] Loaded HDD: " << it->path().filename().string() << std::endl;
+        if (!hardDrive.is<std::string>())
+            throw std::runtime_error("Entry in hard_drives is not a string");
+
+        auto path = hardDrive.get<std::string>();
+        HDD.push_back(
+            new std::fstream(path, std::fstream::in | std::fstream::out | std::fstream::binary));
+        log << "[INIT] Loaded HDD: " << path << std::endl;
     }
-}
-    */
 }
 
 void VMState::LoadBootsector()

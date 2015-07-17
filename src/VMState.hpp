@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Register.hpp"
+#include "PicoJSON.hpp"
 
 #include <vector>
 #include <fstream>
@@ -92,4 +93,6 @@ struct VMState
   private:
     void InitializeHDD();
     void LoadBootsector();
+
+    picojson::value config_;
 };

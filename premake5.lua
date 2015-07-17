@@ -13,7 +13,8 @@ solution "cynosure"
 		postbuildcommands 
 		{ 
 			[[{COPY} test/floppy_1_44.img bin/]],
-			[[{COPY} test/hd1.fs bin/]] 
+			[[{COPY} test/hd1.fs bin/]],
+			[[{COPY} test/config.json bin/]]
 		}
 
 		filter "configurations:Debug"
