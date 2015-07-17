@@ -134,7 +134,7 @@ void Int0x16(VMState* state)
 
 MAKE_OPCODE(0xCD)
 {
-    Log << "0x" << (uint32_t)state->ReadIPRelative(1);
+    Log << "int 0x" << (uint32_t)state->ReadIPRelative(1);
 
     switch (state->ReadIPRelative(1))
     {
@@ -148,4 +148,6 @@ MAKE_OPCODE(0xCD)
         Int0x16(state);
         break;
     };
+
+    state->eip += 2;
 }

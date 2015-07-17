@@ -47,10 +47,9 @@ int main(int argc, char** argv)
         Opcode opcode = opcodes[state->ReadIPRelative(0)];
 
         Log << "0x" << std::setw(2) << std::hex << std::uppercase
-            << (uint32_t)opcode.opcode << ": " << opcode.name;
+            << (uint32_t)opcode.opcode << ": ";
 
         opcode.func(state.get(), opcode);
-        state->eip += opcode.GetFinalOffset(state.get());
 
         Log << std::endl;
     }

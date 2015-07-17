@@ -3,26 +3,19 @@
 #include "Register.hpp"
 
 #define MAKE_OPCODE(opc) void OP##_##opc(VMState* state, Opcode& op)
-#define DECL_OPCODE(opc, name, offset32, offset16)                                                 \
-    opcodes[opc] = Opcode(OP##_##opc, opc, name, offset32, offset16)
+#define BUILD_OPCODE(opc) opcodes[opc] = Opcode(OP##_##opc, opc)
 
 struct Opcode
 {
-	typedef void (*Handler)(VMState*, Opcode&);
-    Handler func;       // Function pointer to the opcode handler
-    std::string name;       // Opcode name
-    uint8_t opcode = 0;     // Opcode associated with this
-    uint8_t offset32 = 0;   // 32 bit translation
-    uint8_t offset16 = 0;   // 16 bit translation
-    uint8_t insnOffset = 0; // state->eip translation: for when this particular opcode needs a different
-                            // translation
+    typedef void (*Handler)(VMState*, Opcode&);
 
     Opcode();
-    Opcode(Handler func, uint8_t opcode, std::string name, uint8_t offset32, uint8_t offset16);
-    uint8_t GetOffset(VMState* state);
-    uint8_t GetFinalOffset(VMState* state);
+    Opcode(Handler func, uint8_t opcode);
 
     static void FillTable(Opcode* opcodes);
+
+    Handler func;			// Function pointer to the opcode handler
+    uint8_t opcode = 0;     // Opcode associated with this instruction
 };
 
 MAKE_OPCODE(0x00);
