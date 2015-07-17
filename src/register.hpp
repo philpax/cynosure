@@ -94,7 +94,7 @@ union ModRM
 #define NEXT_INS(i) (MEMORY(state->eip + (i)))
 #define CURR_INS (NEXT_INS(0))
 
-#define LOG_STREAM (state->log)
+#define Log (state->log)
 
 // Converts the next four 8-bit integers (plus an offset) to one 32-bit integer
 #define ARG_32B(offset) state->Read<int32_t>(state->eip + offset)

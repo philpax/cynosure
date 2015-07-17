@@ -76,13 +76,13 @@ MAKE_OPCODE(0x89)
     switch (mod.mod)
     {
     case 1:
-        LOG_STREAM << "[" << state->GetRegisterName(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
+        Log << "[" << state->GetRegisterName(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
                    << state->GetRegisterName(mod.reg2);
         state->Write(SEGMEM(state->ds, state->general[mod.reg1] + (int8_t)NEXT_INS(2)), state->general[mod.reg2]);
         op.insnOffset++;
         break;
     case 3:
-        LOG_STREAM << state->GetRegisterName(mod.reg1) << ", " << state->GetRegisterName(mod.reg2);
+        Log << state->GetRegisterName(mod.reg1) << ", " << state->GetRegisterName(mod.reg2);
         state->general[mod.reg1] = state->general[mod.reg2];
         break;
     };
@@ -96,12 +96,12 @@ MAKE_OPCODE(0x8A)
     switch (mod.mod)
     {
     case 0:
-        LOG_STREAM << state->GetByteRegisterName(mod.reg2) << ", [" << state->GetRegisterCombinationName(mod.reg1) << "]";
+        Log << state->GetByteRegisterName(mod.reg2) << ", [" << state->GetRegisterCombinationName(mod.reg1) << "]";
         GetRegister8(state, mod.reg2) =
             MEMORY(SEGMEM(state->ds, RegisterCombinationToMemoryAddress(state, mod.reg1)));
         break;
     case 3:
-        LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
+        Log << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
         GetRegister8(state, mod.reg1) = GetRegister8(state, mod.reg2);
         break;
     };
@@ -124,7 +124,7 @@ MAKE_OPCODE(0x8E)
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 3)
     {
-        LOG_STREAM << state->GetSegmentName(mod.reg2) << ", " << state->GetRegisterName(mod.reg1);
+        Log << state->GetSegmentName(mod.reg2) << ", " << state->GetRegisterName(mod.reg1);
         state->segment[mod.reg2] = state->general[mod.reg1];
     }
 }
@@ -132,84 +132,84 @@ MAKE_OPCODE(0x8E)
 // mov reg8, imm8
 MAKE_OPCODE(0xB0)
 {
-    LOG_STREAM << "al, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "al, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetLowerByte(state->eax) = NEXT_INS(1);
 }
 MAKE_OPCODE(0xB1)
 {
-    LOG_STREAM << "cl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "cl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetLowerByte(state->ecx) = NEXT_INS(1);
 }
 MAKE_OPCODE(0xB2)
 {
-    LOG_STREAM << "dl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "dl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetLowerByte(state->edx) = NEXT_INS(1);
 }
 MAKE_OPCODE(0xB3)
 {
-    LOG_STREAM << "bl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "bl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetLowerByte(state->ebx) = NEXT_INS(1);
 }
 MAKE_OPCODE(0xB4)
 {
-    LOG_STREAM << "ah, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "ah, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetUpperByte(state->eax) = NEXT_INS(1);
 }
 MAKE_OPCODE(0xB5)
 {
-    LOG_STREAM << "ch, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "ch, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetUpperByte(state->ecx) = NEXT_INS(1);
 }
 MAKE_OPCODE(0xB6)
 {
-    LOG_STREAM << "dh, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "dh, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetUpperByte(state->edx) = NEXT_INS(1);
 }
 MAKE_OPCODE(0xB7)
 {
-    LOG_STREAM << "bh, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
+    Log << "bh, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
     GetUpperByte(state->ebx) = NEXT_INS(1);
 }
 
 // mov reg, immediate
 MAKE_OPCODE(0xB8)
 {
-    LOG_STREAM << state->GetRegisterName(0) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(0) << ", " << PRINT_VALUE(ARG(1));
     state->eax = ARG(1);
 }
 MAKE_OPCODE(0xB9)
 {
-    LOG_STREAM << state->GetRegisterName(1) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(1) << ", " << PRINT_VALUE(ARG(1));
     state->ecx = ARG(1);
 }
 MAKE_OPCODE(0xBA)
 {
-    LOG_STREAM << state->GetRegisterName(2) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(2) << ", " << PRINT_VALUE(ARG(1));
     state->edx = ARG(1);
 }
 MAKE_OPCODE(0xBB)
 {
-    LOG_STREAM << state->GetRegisterName(3) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(3) << ", " << PRINT_VALUE(ARG(1));
     state->ebx = ARG(1);
 }
 MAKE_OPCODE(0xBC)
 {
-    LOG_STREAM << state->GetRegisterName(4) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(4) << ", " << PRINT_VALUE(ARG(1));
     state->esp = ARG(1);
 }
 MAKE_OPCODE(0xBD)
 {
-    LOG_STREAM << state->GetRegisterName(5) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(5) << ", " << PRINT_VALUE(ARG(1));
     state->ebp = ARG(1);
 }
 MAKE_OPCODE(0xBE)
 {
-    LOG_STREAM << state->GetRegisterName(6) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(6) << ", " << PRINT_VALUE(ARG(1));
     state->esi = ARG(1);
 }
 MAKE_OPCODE(0xBF)
 {
-    LOG_STREAM << state->GetRegisterName(7) << ", " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(7) << ", " << PRINT_VALUE(ARG(1));
     state->edi = ARG(1);
 }
 
@@ -221,12 +221,12 @@ MAKE_OPCODE(0xC6)
     switch (mod.mod)
     {
     case 0:
-        LOG_STREAM << "[" << state->general[mod.reg1] << "], " << PRINT_VALUE((uint32_t)NEXT_INS(2))
+        Log << "[" << state->general[mod.reg1] << "], " << PRINT_VALUE((uint32_t)NEXT_INS(2))
                    << std::endl;
         state->Write(state->general[mod.reg1], NEXT_INS(2));
         break;
     case 3:
-        LOG_STREAM << state->general[mod.reg1] << ", " << PRINT_VALUE((uint32_t)NEXT_INS(2));
+        Log << state->general[mod.reg1] << ", " << PRINT_VALUE((uint32_t)NEXT_INS(2));
         state->general[mod.reg1] = NEXT_INS(2);
         break;
     };

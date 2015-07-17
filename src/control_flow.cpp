@@ -20,47 +20,47 @@ MAKE_OPCODE(0x38)
 // cmp al, imm8
 MAKE_OPCODE(0x3C)
 {
-    LOG_STREAM << "al, " << PRINT_VALUE((int32_t)NEXT_INS(1));
+    Log << "al, " << PRINT_VALUE((int32_t)NEXT_INS(1));
     arithmetic::Sub(state, GetLowerByte(state->eax), NEXT_INS(1));
 }
 
 // cmp eax, imm32
 MAKE_OPCODE(0x3D)
 {
-    LOG_STREAM << state->GetRegisterName(0) << " " << PRINT_VALUE(ARG(1));
+    Log << state->GetRegisterName(0) << " " << PRINT_VALUE(ARG(1));
     arithmetic::Sub(state, state->eax, ARG(1));
 }
 
 // jc/jb imm8
 MAKE_OPCODE(0x72)
 {
-    LOG_STREAM << PRINT_VALUE((int32_t)NEXT_INS(1));
+    Log << PRINT_VALUE((int32_t)NEXT_INS(1));
     if (state->eflags.carry)
     {
         state->eip += (int8_t)NEXT_INS(1);
-        LOG_STREAM << std::endl;
+        Log << std::endl;
     }
 }
 
 // jz/je imm8
 MAKE_OPCODE(0x74)
 {
-    LOG_STREAM << PRINT_VALUE((int32_t)NEXT_INS(1));
+    Log << PRINT_VALUE((int32_t)NEXT_INS(1));
     if (state->eflags.zero)
     {
         state->eip += (int8_t)NEXT_INS(1);
-        LOG_STREAM << std::endl;
+        Log << std::endl;
     }
 }
 
 // jnz/jne imm8
 MAKE_OPCODE(0x75)
 {
-    LOG_STREAM << PRINT_VALUE((int32_t)NEXT_INS(1));
+    Log << PRINT_VALUE((int32_t)NEXT_INS(1));
     if (!state->eflags.zero)
     {
         state->eip += (int8_t)NEXT_INS(1);
-        LOG_STREAM << std::endl;
+        Log << std::endl;
     }
 }
 
@@ -83,7 +83,7 @@ MAKE_OPCODE(0xEA)
 
     state->cs = segment;
     state->eip = SEGMEM(segment, offset);
-    LOG_STREAM << PRINT_VALUE(segment) << ':' << PRINT_VALUE(offset);
+    Log << PRINT_VALUE(segment) << ':' << PRINT_VALUE(offset);
 }
 
 // call imm32
@@ -93,7 +93,7 @@ MAKE_OPCODE(0xE8)
 
     state->Push(state->eip + op.GetOffset(state));
     state->eip += argument;
-    LOG_STREAM << argument << std::endl;
+    Log << argument << std::endl;
 }
 
 // jmp imm32
@@ -105,5 +105,5 @@ MAKE_OPCODE(0xE9)
         state->running = false;
 
     state->eip += argument;
-    LOG_STREAM << argument << std::endl;
+    Log << argument << std::endl;
 }

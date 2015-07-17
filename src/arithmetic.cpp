@@ -89,7 +89,7 @@ MAKE_OPCODE(0x03)
 MAKE_OPCODE(0x08)
 {
     ModRM mod(NEXT_INS(1));
-    LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
+    Log << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
     GetRegister8(state, mod.reg1) =
         arithmetic::Or(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
 }
@@ -98,7 +98,7 @@ MAKE_OPCODE(0x08)
 MAKE_OPCODE(0x30)
 {
     ModRM mod(NEXT_INS(1));
-    LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
+    Log << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
     GetRegister8(state, mod.reg1) =
         arithmetic::Xor(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
 }
@@ -106,83 +106,83 @@ MAKE_OPCODE(0x30)
 MAKE_OPCODE(0x40)
 {
     state->eax = arithmetic::Add(state, state->eax, 1);
-    LOG_STREAM << "eax";
+    Log << "eax";
 }
 MAKE_OPCODE(0x41)
 {
     state->ecx = arithmetic::Add(state, state->ecx, 1);
-    LOG_STREAM << "ecx";
+    Log << "ecx";
 }
 MAKE_OPCODE(0x42)
 {
     state->edx = arithmetic::Add(state, state->edx, 1);
-    LOG_STREAM << "edx";
+    Log << "edx";
 }
 MAKE_OPCODE(0x43)
 {
     state->ebx = arithmetic::Add(state, state->ebx, 1);
-    LOG_STREAM << "ebx";
+    Log << "ebx";
 }
 MAKE_OPCODE(0x44)
 {
     state->esp = arithmetic::Add(state, state->esp, 1);
-    LOG_STREAM << "esp";
+    Log << "esp";
 }
 MAKE_OPCODE(0x45)
 {
     state->ebp = arithmetic::Add(state, state->ebp, 1);
-    LOG_STREAM << "ebp";
+    Log << "ebp";
 }
 MAKE_OPCODE(0x46)
 {
     state->esi = arithmetic::Add(state, state->esi, 1);
-    LOG_STREAM << "esi";
+    Log << "esi";
 }
 MAKE_OPCODE(0x47)
 {
     state->edi = arithmetic::Add(state, state->edi, 1);
-    LOG_STREAM << "edi";
+    Log << "edi";
 }
 
 MAKE_OPCODE(0x48)
 {
     state->eax = arithmetic::Sub(state, state->eax, 1);
-    LOG_STREAM << "eax";
+    Log << "eax";
 }
 MAKE_OPCODE(0x49)
 {
     state->ecx = arithmetic::Sub(state, state->ecx, 1);
-    LOG_STREAM << "ecx";
+    Log << "ecx";
 }
 MAKE_OPCODE(0x4A)
 {
     state->edx = arithmetic::Sub(state, state->edx, 1);
-    LOG_STREAM << "edx";
+    Log << "edx";
 }
 MAKE_OPCODE(0x4B)
 {
     state->ebx = arithmetic::Sub(state, state->ebx, 1);
-    LOG_STREAM << "ebx";
+    Log << "ebx";
 }
 MAKE_OPCODE(0x4C)
 {
     state->esp = arithmetic::Sub(state, state->esp, 1);
-    LOG_STREAM << "esp";
+    Log << "esp";
 }
 MAKE_OPCODE(0x4D)
 {
     state->ebp = arithmetic::Sub(state, state->ebp, 1);
-    LOG_STREAM << "ebp";
+    Log << "ebp";
 }
 MAKE_OPCODE(0x4E)
 {
     state->esi = arithmetic::Sub(state, state->esi, 1);
-    LOG_STREAM << "esi";
+    Log << "esi";
 }
 MAKE_OPCODE(0x4F)
 {
     state->edi = arithmetic::Sub(state, state->edi, 1);
-    LOG_STREAM << "edi";
+    Log << "edi";
 }
 
 // add/sub/cmp reg8, imm8
@@ -193,48 +193,48 @@ MAKE_OPCODE(0x80)
     switch (mod.reg2)
     {
     case 0:
-        LOG_STREAM << "add ";
+        Log << "add ";
         switch (mod.mod)
         {
         case 0:
-            LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
+            Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
             MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Add(
                 state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
-            LOG_STREAM << state->GetByteRegisterName(mod.reg1);
+            Log << state->GetByteRegisterName(mod.reg1);
             GetRegister8(state, mod.reg1) =
                 arithmetic::Add(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
             break;
         };
         break;
     case 5:
-        LOG_STREAM << "sub ";
+        Log << "sub ";
         switch (mod.mod)
         {
         case 0:
-            LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
+            Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
             MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Sub(
                 state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
-            LOG_STREAM << state->GetByteRegisterName(mod.reg1);
+            Log << state->GetByteRegisterName(mod.reg1);
             GetRegister8(state, mod.reg1) =
                 arithmetic::Sub(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
             break;
         };
         break;
     case 7:
-        LOG_STREAM << "cmp ";
+        Log << "cmp ";
         switch (mod.mod)
         {
         case 0:
-            LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
+            Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
             arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))),
                             NEXT_INS(2));
             break;
         case 3:
-            LOG_STREAM << state->GetByteRegisterName(mod.reg1);
+            Log << state->GetByteRegisterName(mod.reg1);
             arithmetic::Sub(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
             break;
         };
@@ -250,55 +250,55 @@ MAKE_OPCODE(0x81)
     switch (mod.reg2)
     {
     case 0:
-        LOG_STREAM << "add ";
+        Log << "add ";
         switch (mod.mod)
         {
         case 0:
-            LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
+            Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
             MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Add(
                 state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), ARG(2));
             break;
         case 3:
-            LOG_STREAM << state->GetByteRegisterName(mod.reg1);
+            Log << state->GetByteRegisterName(mod.reg1);
             GetRegister8(state, mod.reg1) =
                 arithmetic::Add(state, GetRegister8(state, mod.reg1), ARG(2));
             break;
         };
         break;
     case 5:
-        LOG_STREAM << "sub ";
+        Log << "sub ";
         switch (mod.mod)
         {
         case 0:
-            LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
+            Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
             MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Sub(
                 state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), ARG(2));
             break;
         case 3:
-            LOG_STREAM << state->GetByteRegisterName(mod.reg1);
+            Log << state->GetByteRegisterName(mod.reg1);
             GetRegister8(state, mod.reg1) =
                 arithmetic::Sub(state, GetRegister8(state, mod.reg1), ARG(2));
             break;
         };
         break;
     case 7:
-        LOG_STREAM << "cmp ";
+        Log << "cmp ";
         switch (mod.mod)
         {
         case 0:
-            LOG_STREAM << '[' << state->GetByteRegisterName(mod.reg1) << ']';
+            Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
             arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))),
                             ARG(2));
             break;
         case 3:
-            LOG_STREAM << state->GetByteRegisterName(mod.reg1);
+            Log << state->GetByteRegisterName(mod.reg1);
             arithmetic::Sub(state, GetRegister8(state, mod.reg1), ARG(2));
             break;
         };
         break;
     };
 
-    LOG_STREAM << ", " << PRINT_VALUE(ARG(2));
+    Log << ", " << PRINT_VALUE(ARG(2));
 }
 
 // rol/ror/rcl/rcr/shl/shr/shl/sar reg, 1

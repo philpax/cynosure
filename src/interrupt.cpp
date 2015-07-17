@@ -21,7 +21,7 @@ struct diskAddressPacket
 
 MAKE_OPCODE(0xCD)
 {
-    LOG_STREAM << "0x" << (uint32_t)NEXT_INS(1);
+    Log << "0x" << (uint32_t)NEXT_INS(1);
     uint8_t driveNumber = GetLowerByte(state->edx) ^ 0x80;
 
     switch (NEXT_INS(1))
@@ -31,7 +31,7 @@ MAKE_OPCODE(0xCD)
         {
         case 0xE:
             putchar(GetLowerByte(state->eax));
-            LOG_STREAM << " (Wrote " << utils::EscapeCharacter(GetLowerByte(state->eax)) << ")";
+            Log << " (Wrote " << utils::EscapeCharacter(GetLowerByte(state->eax)) << ")";
             break;
         };
         break;
@@ -70,13 +70,13 @@ MAKE_OPCODE(0xCD)
         {
             diskAddressPacket* packet =
                 (diskAddressPacket*)(state->memory + SEGMEM(state->ds, state->esi));
-            LOG_STREAM << std::endl << "INT 0x13 packet:" << std::endl;
-            LOG_STREAM << " Size: " << PRINT_VALUE((uint32_t)packet->sizePacket) << std::endl;
-            LOG_STREAM << " Sectors to transfer: " << PRINT_VALUE(packet->sectorTransferCount)
+            Log << std::endl << "INT 0x13 packet:" << std::endl;
+            Log << " Size: " << PRINT_VALUE((uint32_t)packet->sizePacket) << std::endl;
+            Log << " Sectors to transfer: " << PRINT_VALUE(packet->sectorTransferCount)
                        << std::endl;
-            LOG_STREAM << " Memory address: " << PRINT_VALUE(packet->segmentAddr) << ":"
+            Log << " Memory address: " << PRINT_VALUE(packet->segmentAddr) << ":"
                        << PRINT_VALUE(packet->offsetAddr) << std::endl;
-            LOG_STREAM << " LBA (32 bits out of 48): " << PRINT_VALUE(packet->startingLBA)
+            Log << " LBA (32 bits out of 48): " << PRINT_VALUE(packet->startingLBA)
                        << std::endl;
             // Lazy hack: assume a sector is 512 bytes
             uint32_t readAmount = packet->sectorTransferCount * 512;
@@ -110,7 +110,7 @@ MAKE_OPCODE(0xCD)
         GetLowerByte(state->eax) = readCharacter;
         GetUpperByte(state->eax) = 0;
 
-        LOG_STREAM << " (Read " << utils::EscapeCharacter(readCharacter) << ")";
+        Log << " (Read " << utils::EscapeCharacter(readCharacter) << ")";
         break;
     }
     };

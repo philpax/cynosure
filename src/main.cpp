@@ -44,13 +44,13 @@ int main(int argc, char** argv)
     {
         Opcode opcode = opcodes[CURR_INS];
 
-        LOG_STREAM << "0x" << std::setw(2) << std::hex << (uint32_t)opcode.opcode << ": "
+        Log << "0x" << std::setw(2) << std::hex << (uint32_t)opcode.opcode << ": "
                    << opcode.name;
 
         opcode.func(state, opcode);
         state->eip += opcode.GetFinalOffset(state);
 
-        LOG_STREAM << std::endl;
+        Log << std::endl;
     }
 
     delete state;
