@@ -93,8 +93,12 @@ MAKE_OPCODE(CD)
 #ifdef _WIN32
         EAX.l = _getch( );
 #else
-        EAX.l = getchar( ); // sorry, non-windows users
+        EAX.l = getchar( );
 #endif
+        // Remap line feed to carriage return
+        if (EAX.l == '\n')
+            EAX.l = '\r';
+
         LOG_STREAM << " (Read " << utils::EscapeCharacter( EAX.l ) << ")";
         EAX.h = 0;
         break;
