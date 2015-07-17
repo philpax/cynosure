@@ -137,42 +137,42 @@ MAKE_OPCODE(0x8E)
 // mov reg8, imm8
 MAKE_OPCODE(0xB0)
 {
-    Log << "al, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "al, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetLowerByte(state->eax) = state->ReadIPRelative(1);
 }
 MAKE_OPCODE(0xB1)
 {
-    Log << "cl, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "cl, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetLowerByte(state->ecx) = state->ReadIPRelative(1);
 }
 MAKE_OPCODE(0xB2)
 {
-    Log << "dl, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "dl, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetLowerByte(state->edx) = state->ReadIPRelative(1);
 }
 MAKE_OPCODE(0xB3)
 {
-    Log << "bl, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "bl, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetLowerByte(state->ebx) = state->ReadIPRelative(1);
 }
 MAKE_OPCODE(0xB4)
 {
-    Log << "ah, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "ah, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetUpperByte(state->eax) = state->ReadIPRelative(1);
 }
 MAKE_OPCODE(0xB5)
 {
-    Log << "ch, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "ch, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetUpperByte(state->ecx) = state->ReadIPRelative(1);
 }
 MAKE_OPCODE(0xB6)
 {
-    Log << "dh, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "dh, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetUpperByte(state->edx) = state->ReadIPRelative(1);
 }
 MAKE_OPCODE(0xB7)
 {
-    Log << "bh, " << PRINT_VALUE((uint32_t)state->ReadIPRelative(1));
+    Log << "bh, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
     GetUpperByte(state->ebx) = state->ReadIPRelative(1);
 }
 
@@ -238,16 +238,23 @@ MAKE_OPCODE(0xC6)
 {
     ModRM mod(state->ReadIPRelative(1));
 
+    auto immediate = state->ReadIPRelative(2);
+
     switch (mod.mod)
     {
     case 0:
-        Log << "[" << state->general[mod.reg1] << "], " << PRINT_VALUE((uint32_t)state->ReadIPRelative(2))
+        Log << "[" << state->general[mod.reg1] << "], "
+                   << PRINT_VALUE(static_cast<uint32_t>(immediate))
                    << std::endl;
-        state->Write(state->general[mod.reg1], state->ReadIPRelative(2));
+
+        state->Write(state->general[mod.reg1], immediate);
         break;
     case 3:
-        Log << state->general[mod.reg1] << ", " << PRINT_VALUE((uint32_t)state->ReadIPRelative(2));
-        state->general[mod.reg1] = state->ReadIPRelative(2);
+        Log << state->general[mod.reg1] << ", "
+            << PRINT_VALUE(static_cast<uint32_t>(immediate))
+            << std::endl;
+
+        state->general[mod.reg1] = immediate;
         break;
     };
 }
