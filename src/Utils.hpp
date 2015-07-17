@@ -1,5 +1,4 @@
-#ifndef _UTILS_HPP_
-#define _UTILS_HPP_
+#pragma once
 
 #include <stdint.h>
 #include <cstring>
@@ -26,5 +25,3 @@ namespace utils
 {
     std::string EscapeCharacter(char input);
 };
-
-#endif

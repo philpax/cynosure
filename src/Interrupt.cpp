@@ -1,5 +1,5 @@
-#include "register.hpp"
-#include "opcodes.hpp"
+#include "Register.hpp"
+#include "Opcodes.hpp"
 #include "VMState.hpp"
 #include <iostream>
 

@@ -1,4 +1,4 @@
-#include "register.hpp"
+#include "Register.hpp"
 #include "VMState.hpp"
 
 uint8_t& GetRegister8(VMState* state, uint8_t index)

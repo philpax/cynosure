@@ -1,6 +1,7 @@
 #pragma once
 
-#include "register.hpp"
+#include "Register.hpp"
+
 #include <vector>
 #include <fstream>
 

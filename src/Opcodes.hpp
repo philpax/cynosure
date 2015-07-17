@@ -1,7 +1,6 @@
-#ifndef _OPCODES_HPP_
-#define _OPCODES_HPP_
+#pragma once
 
-#include "register.hpp"
+#include "Register.hpp"
 
 #define MAKE_OPCODE(opc) void OP##_##opc(VMState* state, Opcode& op)
 #define DECL_OPCODE(opc, name, offset32, offset16)                                                 \
@@ -297,4 +296,3 @@ MAKE_OPCODE(0xFE);
 MAKE_OPCODE(0xFF);
 
 void opcodesGenerate(Opcode* opcodes);
-#endif

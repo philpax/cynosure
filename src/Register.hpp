@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include "utils.hpp"
+#include "Utils.hpp"
 
 struct VMState;
 

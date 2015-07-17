@@ -1,6 +1,6 @@
-#include "register.hpp"
+#include "Register.hpp"
 #include "VMState.hpp"
-#include "opcodes.hpp"
+#include "Opcodes.hpp"
 
 MAKE_OPCODE(0xAA)
 {

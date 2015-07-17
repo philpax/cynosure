@@ -1,6 +1,6 @@
 #include "VMState.hpp"
-#include "register.hpp"
-#include "opcodes.hpp"
+#include "Register.hpp"
+#include "Opcodes.hpp"
 
 #ifdef _WIN32
 #include <Windows.h>

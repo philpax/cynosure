@@ -1,8 +1,7 @@
-#ifndef _ARITHMETIC_HPP_
-#define _ARITHMETIC_HPP_
+#pragma once
 
 #include <stdint.h>
-#include "register.hpp"
+#include "Register.hpp"
 #include "VMState.hpp"
 
 namespace arithmetic
@@ -16,5 +15,3 @@ namespace arithmetic
 
     uint32_t ShiftLeft(VMState* state, uint32_t a, uint32_t b);
 };
-
-#endif

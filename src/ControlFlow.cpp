@@ -1,5 +1,7 @@
-#include "control_flow.hpp"
-#include "opcodes.hpp"
+#include "Register.hpp"
+#include "Arithmetic.hpp"
+#include "VMState.hpp"
+#include "Opcodes.hpp"
 
 // cmp reg8, reg8
 MAKE_OPCODE(0x38)

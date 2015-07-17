@@ -1,4 +1,4 @@
-#include "opcodes.hpp"
+#include "Opcodes.hpp"
 #include "VMState.hpp"
 
 Opcode::Opcode()

@@ -1,5 +1,5 @@
-#include "arithmetic.hpp"
-#include "opcodes.hpp"
+#include "Arithmetic.hpp"
+#include "Opcodes.hpp"
 
 void UpdateEFLAGS(VMState* state, uint32_t value)
 {
