@@ -127,6 +127,7 @@ MAKE_OPCODE(0x40)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x41)
 {
     state->ecx = arithmetic::Add(state, state->ecx, 1);
@@ -134,6 +135,7 @@ MAKE_OPCODE(0x41)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x42)
 {
     state->edx = arithmetic::Add(state, state->edx, 1);
@@ -141,6 +143,7 @@ MAKE_OPCODE(0x42)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x43)
 {
     state->ebx = arithmetic::Add(state, state->ebx, 1);
@@ -148,6 +151,7 @@ MAKE_OPCODE(0x43)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x44)
 {
     state->esp = arithmetic::Add(state, state->esp, 1);
@@ -155,6 +159,7 @@ MAKE_OPCODE(0x44)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x45)
 {
     state->ebp = arithmetic::Add(state, state->ebp, 1);
@@ -162,6 +167,7 @@ MAKE_OPCODE(0x45)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x46)
 {
     state->esi = arithmetic::Add(state, state->esi, 1);
@@ -169,6 +175,7 @@ MAKE_OPCODE(0x46)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x47)
 {
     state->edi = arithmetic::Add(state, state->edi, 1);
@@ -184,6 +191,7 @@ MAKE_OPCODE(0x48)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x49)
 {
     state->ecx = arithmetic::Sub(state, state->ecx, 1);
@@ -191,6 +199,7 @@ MAKE_OPCODE(0x49)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x4A)
 {
     state->edx = arithmetic::Sub(state, state->edx, 1);
@@ -198,6 +207,7 @@ MAKE_OPCODE(0x4A)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x4B)
 {
     state->ebx = arithmetic::Sub(state, state->ebx, 1);
@@ -205,6 +215,7 @@ MAKE_OPCODE(0x4B)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x4C)
 {
     state->esp = arithmetic::Sub(state, state->esp, 1);
@@ -212,6 +223,7 @@ MAKE_OPCODE(0x4C)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x4D)
 {
     state->ebp = arithmetic::Sub(state, state->ebp, 1);
@@ -219,6 +231,7 @@ MAKE_OPCODE(0x4D)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x4E)
 {
     state->esi = arithmetic::Sub(state, state->esi, 1);
@@ -226,6 +239,7 @@ MAKE_OPCODE(0x4E)
 
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x4F)
 {
     state->edi = arithmetic::Sub(state, state->edi, 1);

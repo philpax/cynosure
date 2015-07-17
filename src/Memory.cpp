@@ -8,42 +8,49 @@ MAKE_OPCODE(0x50)
     state->Push(state->eax);
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x51)
 {
     Log << "push ";
     state->Push(state->ecx);
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x52)
 {
     Log << "push ";
     state->Push(state->edx);
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x53)
 {
     Log << "push ";
     state->Push(state->ebx);
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x54)
 {
     Log << "push ";
     state->Push(state->esp);
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x55)
 {
     Log << "push ";
     state->Push(state->ebp);
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x56)
 {
     Log << "push ";
     state->Push(state->esi);
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x57)
 {
     Log << "push ";
@@ -58,42 +65,49 @@ MAKE_OPCODE(0x58)
     state->eax = state->Pop();
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x59)
 {
     Log << "pop ";
     state->ecx = state->Pop();
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x5A)
 {
     Log << "pop ";
     state->edx = state->Pop();
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x5B)
 {
     Log << "pop ";
     state->ebx = state->Pop();
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x5C)
 {
     Log << "pop ";
     state->esp = state->Pop();
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x5D)
 {
     Log << "pop ";
     state->ebp = state->Pop();
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x5E)
 {
     Log << "pop ";
     state->esi = state->Pop();
     state->eip += 1;
 }
+
 MAKE_OPCODE(0x5F)
 {
     Log << "pop ";
@@ -188,6 +202,7 @@ MAKE_OPCODE(0xB0)
 
     state->eip += 2;
 }
+
 MAKE_OPCODE(0xB1)
 {
     Log << "mov cl, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
@@ -195,6 +210,7 @@ MAKE_OPCODE(0xB1)
 
     state->eip += 2;
 }
+
 MAKE_OPCODE(0xB2)
 {
     Log << "mov dl, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
@@ -202,6 +218,7 @@ MAKE_OPCODE(0xB2)
 
     state->eip += 2;
 }
+
 MAKE_OPCODE(0xB3)
 {
     Log << "mov bl, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
@@ -209,6 +226,7 @@ MAKE_OPCODE(0xB3)
 
     state->eip += 2;
 }
+
 MAKE_OPCODE(0xB4)
 {
     Log << "mov ah, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
@@ -216,6 +234,7 @@ MAKE_OPCODE(0xB4)
 
     state->eip += 2;
 }
+
 MAKE_OPCODE(0xB5)
 {
     Log << "mov ch, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
@@ -223,6 +242,7 @@ MAKE_OPCODE(0xB5)
 
     state->eip += 2;
 }
+
 MAKE_OPCODE(0xB6)
 {
     Log << "mov dh, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
@@ -230,6 +250,7 @@ MAKE_OPCODE(0xB6)
 
     state->eip += 2;
 }
+
 MAKE_OPCODE(0xB7)
 {
     Log << "mov bh, " << PRINT_VALUE(static_cast<uint32_t>(state->ReadIPRelative(1)));
