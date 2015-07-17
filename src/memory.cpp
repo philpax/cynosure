@@ -1,131 +1,97 @@
 #include "memory.hpp"
 
 // Helper function
-void memory::Conv32BTo8B(uint32_t value, uint8_t& a, uint8_t& b, uint8_t& c, uint8_t& d)
+void memory::Write(VMState* state, uint32_t location, void const* data, size_t count)
 {
-    a = (uint8_t)value;
-    b = (uint8_t)(value >> 8);
-    c = (uint8_t)(value >> 16);
-    d = (uint8_t)(value >> 24);
-}
-
-void memory::Conv16BTo8B(uint16_t value, uint8_t& a, uint8_t& b)
-{
-    a = (uint8_t)value;
-    b = (uint8_t)(value >> 8);
-}
-
-void memory::ConvTo8B(VMState* state, uint32_t value, uint8_t& a, uint8_t& b, uint8_t& c,
-                      uint8_t& d)
-{
-    if (state->CR0.protectedMode)
-        memory::Conv32BTo8B(value, a, b, c, d);
-    else
-        memory::Conv16BTo8B((uint16_t)value, a, b);
-}
-
-void memory::WriteValueToMemory(VMState* state, uint32_t location, uint32_t value)
-{
-    uint8_t a, b, c, d;
-    ConvTo8B(state, value, a, b, c, d);
-
-    state->memory[ESP.r] = a;
-    state->memory[ESP.r + 1] = b;
-
-    if (state->CR0.protectedMode)
-    {
-        state->memory[ESP.r + 2] = c;
-        state->memory[ESP.r + 3] = d;
-    }
-
-    LOG_STREAM << "[MEMORY] Wrote " << value << " to " << location;
+    memcpy(&state->memory[location], data, count);
+    LOG_STREAM << "[MEMORY] Wrote " << count << " bytes to " << location;
 }
 
 // Stack instructions
 void memory::Push(VMState* state, uint32_t value)
 {
-    ESP.r -= (state->CR0.protectedMode ? 4 : 2);
+    state->esp -= (state->CR0.protectedMode ? 4 : 2);
     LOG_STREAM << std::endl;
-    WriteValueToMemory(state, ESP.r, value);
+    Write(state, state->esp, value);
 
-    LOG_STREAM << std::endl << "[STACK] Pushed: " << value << " to " << ESP.r;
+    LOG_STREAM << std::endl << "[STACK] Pushed: " << value << " to " << state->esp;
 }
 
 Register32 memory::Pop(VMState* state)
 {
     Register32 value;
-    value.r = (ARG_M(ESP.r));
-    LOG_STREAM << std::endl << "[STACK] Popped: " << value.r << " from " << ESP.r;
-    ESP.r += (state->CR0.protectedMode ? 4 : 2);
+    value = (ARG_M(state->esp));
+    LOG_STREAM << std::endl << "[STACK] Popped: " << value << " from " << state->esp;
+    state->esp += (state->CR0.protectedMode ? 4 : 2);
     return value;
 }
 
 // push reg
 MAKE_OPCODE(50)
 {
-    memory::Push(state, EAX.r);
+    memory::Push(state, state->eax);
 }
 MAKE_OPCODE(51)
 {
-    memory::Push(state, ECX.r);
+    memory::Push(state, state->ecx);
 }
 MAKE_OPCODE(52)
 {
-    memory::Push(state, EDX.r);
+    memory::Push(state, state->edx);
 }
 MAKE_OPCODE(53)
 {
-    memory::Push(state, EBX.r);
+    memory::Push(state, state->ebx);
 }
 MAKE_OPCODE(54)
 {
-    memory::Push(state, ESP.r);
+    memory::Push(state, state->esp);
 }
 MAKE_OPCODE(55)
 {
-    memory::Push(state, EBP.r);
+    memory::Push(state, state->ebp);
 }
 MAKE_OPCODE(56)
 {
-    memory::Push(state, ESI.r);
+    memory::Push(state, state->esi);
 }
 MAKE_OPCODE(57)
 {
-    memory::Push(state, EDI.r);
+    memory::Push(state, state->edi);
 }
 
 // pop reg
 MAKE_OPCODE(58)
 {
-    EAX = memory::Pop(state);
+    state->eax = memory::Pop(state);
 }
 MAKE_OPCODE(59)
 {
-    ECX = memory::Pop(state);
+    state->ecx = memory::Pop(state);
 }
 MAKE_OPCODE(5A)
 {
-    EDX = memory::Pop(state);
+    state->edx = memory::Pop(state);
 }
 MAKE_OPCODE(5B)
 {
-    EBX = memory::Pop(state);
+    state->ebx = memory::Pop(state);
 }
 MAKE_OPCODE(5C)
 {
-    ESP = memory::Pop(state);
+    state->esp = memory::Pop(state);
 }
 MAKE_OPCODE(5D)
 {
-    EBP = memory::Pop(state);
+    state->ebp = memory::Pop(state);
 }
 MAKE_OPCODE(5E)
 {
-    ESI = memory::Pop(state);
+    state->esi = memory::Pop(state);
 }
 MAKE_OPCODE(5F)
 {
-    EDI = memory::Pop(state);
+    state->edi = memory::Pop(state);
 }
 
 // mov reg, reg OR mov [reg+disp], reg
@@ -138,8 +104,7 @@ MAKE_OPCODE(89)
     case 1:
         LOG_STREAM << "[" << R_Gn(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
                    << R_Gn(mod.reg2);
-        memory::WriteValueToMemory(state, SEGMEM(DS.r, R_G(mod.reg1).r + (int8_t)NEXT_INS(2)),
-                                   R_G(mod.reg2).r);
+        memory::Write(state, SEGMEM(DS, R_G(mod.reg1) + (int8_t)NEXT_INS(2)), R_G(mod.reg2));
         op.ins_offset++;
         break;
     case 3:
@@ -159,7 +124,7 @@ MAKE_OPCODE(8A)
     case 0:
         LOG_STREAM << R_LHn[mod.reg2] << ", [" << R_RCn(mod.reg1) << "]";
         GetLHRegister(state, mod.reg2) =
-            MEMORY(SEGMEM(DS.r, RegisterCombinationToMemoryAddress(state, mod.reg1)));
+            MEMORY(SEGMEM(DS, RegisterCombinationToMemoryAddress(state, mod.reg1)));
         break;
     case 3:
         LOG_STREAM << R_LHn[mod.reg1] << ", " << R_LHn[mod.reg2];
@@ -175,7 +140,7 @@ MAKE_OPCODE(8B)
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
     {
-        R_G(mod.reg2).r = MEMORY(SEGMEM(DS.r, R_G(mod.reg1).r + (int8_t)NEXT_INS(2)));
+        R_G(mod.reg2) = MEMORY(SEGMEM(DS, R_G(mod.reg1) + (int8_t)NEXT_INS(2)));
     }
 }
 
@@ -186,7 +151,7 @@ MAKE_OPCODE(8E)
     if (mod.mod == 3)
     {
         LOG_STREAM << R_Sn[mod.reg2] << ", " << R_Gn(mod.reg1);
-        R_S(mod.reg2).r = R_G(mod.reg1).r;
+        R_S(mod.reg2) = R_G(mod.reg1);
     }
 }
 
@@ -194,84 +159,84 @@ MAKE_OPCODE(8E)
 MAKE_OPCODE(B0)
 {
     LOG_STREAM << "al, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    EAX.l = NEXT_INS(1);
+    GetLowerByte(state->eax) = NEXT_INS(1);
 }
 MAKE_OPCODE(B1)
 {
     LOG_STREAM << "cl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    ECX.l = NEXT_INS(1);
+    GetLowerByte(state->ecx) = NEXT_INS(1);
 }
 MAKE_OPCODE(B2)
 {
     LOG_STREAM << "dl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    EDX.l = NEXT_INS(1);
+    GetLowerByte(state->edx) = NEXT_INS(1);
 }
 MAKE_OPCODE(B3)
 {
     LOG_STREAM << "bl, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    EBX.l = NEXT_INS(1);
+    GetLowerByte(state->ebx) = NEXT_INS(1);
 }
 MAKE_OPCODE(B4)
 {
     LOG_STREAM << "ah, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    EAX.h = NEXT_INS(1);
+    GetUpperByte(state->eax) = NEXT_INS(1);
 }
 MAKE_OPCODE(B5)
 {
     LOG_STREAM << "ch, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    ECX.h = NEXT_INS(1);
+    GetUpperByte(state->ecx) = NEXT_INS(1);
 }
 MAKE_OPCODE(B6)
 {
     LOG_STREAM << "dh, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    EDX.h = NEXT_INS(1);
+    GetUpperByte(state->edx) = NEXT_INS(1);
 }
 MAKE_OPCODE(B7)
 {
     LOG_STREAM << "bh, " << PRINT_VALUE((uint32_t)NEXT_INS(1));
-    EBX.h = NEXT_INS(1);
+    GetUpperByte(state->ebx) = NEXT_INS(1);
 }
 
 // mov reg, immediate
 MAKE_OPCODE(B8)
 {
     LOG_STREAM << R_Gn(0) << ", " << PRINT_VALUE(ARG(1));
-    EAX.r = ARG(1);
+    state->eax = ARG(1);
 }
 MAKE_OPCODE(B9)
 {
     LOG_STREAM << R_Gn(1) << ", " << PRINT_VALUE(ARG(1));
-    ECX.r = ARG(1);
+    state->ecx = ARG(1);
 }
 MAKE_OPCODE(BA)
 {
     LOG_STREAM << R_Gn(2) << ", " << PRINT_VALUE(ARG(1));
-    EDX.r = ARG(1);
+    state->edx = ARG(1);
 }
 MAKE_OPCODE(BB)
 {
     LOG_STREAM << R_Gn(3) << ", " << PRINT_VALUE(ARG(1));
-    EBX.r = ARG(1);
+    state->ebx = ARG(1);
 }
 MAKE_OPCODE(BC)
 {
     LOG_STREAM << R_Gn(4) << ", " << PRINT_VALUE(ARG(1));
-    ESP.r = ARG(1);
+    state->esp = ARG(1);
 }
 MAKE_OPCODE(BD)
 {
     LOG_STREAM << R_Gn(5) << ", " << PRINT_VALUE(ARG(1));
-    EBP.r = ARG(1);
+    state->ebp = ARG(1);
 }
 MAKE_OPCODE(BE)
 {
     LOG_STREAM << R_Gn(6) << ", " << PRINT_VALUE(ARG(1));
-    ESI.r = ARG(1);
+    state->esi = ARG(1);
 }
 MAKE_OPCODE(BF)
 {
     LOG_STREAM << R_Gn(7) << ", " << PRINT_VALUE(ARG(1));
-    EDI.r = ARG(1);
+    state->edi = ARG(1);
 }
 
 // mov [reg], imm8
@@ -282,13 +247,13 @@ MAKE_OPCODE(C6)
     switch (mod.mod)
     {
     case 0:
-        LOG_STREAM << "[" << R_G(mod.reg1).r << "], " << PRINT_VALUE((uint32_t)NEXT_INS(2))
+        LOG_STREAM << "[" << R_G(mod.reg1) << "], " << PRINT_VALUE((uint32_t)NEXT_INS(2))
                    << std::endl;
-        memory::WriteValueToMemory(state, R_G(mod.reg1).r, NEXT_INS(2));
+        memory::Write(state, R_G(mod.reg1), NEXT_INS(2));
         break;
     case 3:
-        LOG_STREAM << R_G(mod.reg1).r << ", " << PRINT_VALUE((uint32_t)NEXT_INS(2));
-        R_G(mod.reg1).r = NEXT_INS(2);
+        LOG_STREAM << R_G(mod.reg1) << ", " << PRINT_VALUE((uint32_t)NEXT_INS(2));
+        R_G(mod.reg1) = NEXT_INS(2);
         break;
     };
 }
@@ -306,7 +271,7 @@ MAKE_OPCODE(C7)
         op.ins_offset++;
     }
 
-    uint32_t memAddress = R_G(sib.reg1).r + (int32_t)displacement;
-    memory::WriteValueToMemory(state, memAddress,
-                               ARG(op.GetOffset(state) - (state->CR0.protectedMode ? 4 : 2)));
+    uint32_t memAddress = R_G(sib.reg1) + (int32_t)displacement;
+    memory::Write(state, memAddress,
+        ARG(op.GetOffset(state) - (state->CR0.protectedMode ? 4 : 2)));
 }

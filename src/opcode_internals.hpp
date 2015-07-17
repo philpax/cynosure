@@ -17,7 +17,7 @@ struct opcode
     uint8_t opc;        // Opcode associated with this
     uint8_t offset32;   // 32 bit translation
     uint8_t offset16;   // 16 bit translation
-    uint8_t ins_offset; // EIP translation: for when this particular opcode needs a different
+    uint8_t ins_offset; // state->eip translation: for when this particular opcode needs a different
                         // translation
     uint8_t GetOffset(VMState* state)
     {

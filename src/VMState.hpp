@@ -16,7 +16,25 @@ struct VMState
 
     void LogRegisters();
 
-    Register32 general[9];
+    union
+    {
+        Register32 general[9];
+        struct
+        {
+            Register32 eax; // EAX - Accumulator Register
+            Register32 ecx; // ECX - Counter Register
+            Register32 edx; // EDX - Data Register
+
+            Register32 ebx; // EBX - Base Register
+            Register32 esp; // ESP - Stack Pointer
+            Register32 ebp; // EBP - Base Stack Pointer
+
+            Register32 esi; // ESI - Source Index
+            Register32 edi; // EDI - Destination Index
+            Register32 eip; // EIP - Instruction Pointer
+        };
+    };
+    
     RegisterCR0 CR0;
     RegisterEFLAGS eflags;
 

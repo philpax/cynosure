@@ -22,33 +22,33 @@ struct diskAddressPacket
 MAKE_OPCODE(CD)
 {
     LOG_STREAM << "0x" << (uint32_t)NEXT_INS(1);
-    uint8_t driveNumber = EDX.l ^ 0x80;
+    uint8_t driveNumber = GetLowerByte(state->edx) ^ 0x80;
 
     switch (NEXT_INS(1))
     {
     case 0x10: // Display characters
-        switch (EAX.h)
+        switch (GetUpperByte(state->eax))
         {
         case 0xE:
-            putchar(EAX.l);
-            LOG_STREAM << " (Wrote " << utils::EscapeCharacter(EAX.l) << ")";
+            putchar(GetLowerByte(state->eax));
+            LOG_STREAM << " (Wrote " << utils::EscapeCharacter(GetLowerByte(state->eax)) << ")";
             break;
         };
         break;
     case 0x13: // Hard drive functions
-        switch (EAX.h)
+        switch (GetUpperByte(state->eax))
         {
         case 0x02: // Read floppy
         {
             // Sectors: 18 | Cylinders: 80 | Heads: 2 | 512 bytes per sector
-            uint8_t sectorCount = EAX.l;
-            uint8_t cylinder = ECX.h;
-            uint8_t sector = ECX.l;
-            uint8_t head = EDX.h;
+            uint8_t sectorCount = GetLowerByte(state->eax);
+            uint8_t cylinder = GetUpperByte(state->ecx);
+            uint8_t sector = GetLowerByte(state->ecx);
+            uint8_t head = GetUpperByte(state->edx);
 
-            uint8_t* addr = (uint8_t*)(state->memory + SEGMEM(ES.r, EBX.r));
-            uint32_t LBA =
-                ((cylinder * 2) + head) * 18 + sector - 1; // LBA = ((C * HPC) + H) * SPT + S - 1
+            uint8_t* addr = (uint8_t*)(state->memory + SEGMEM(ES, state->ebx));
+            // LBA = ((C * HPC) + H) * SPT + S - 1
+            uint32_t LBA = ((cylinder * 2) + head) * 18 + sector - 1;
             uint32_t readAmount = sectorCount * 512;
 
             uint8_t* tempStorage = new uint8_t[readAmount];
@@ -57,18 +57,18 @@ MAKE_OPCODE(CD)
             memcpy(addr, tempStorage, readAmount);
             delete tempStorage;
 
-            EFLAGS.carry = false;
-            EAX.h = 0;
+            state->eflags.carry = false;
+            GetUpperByte(state->eax) = 0;
         }
         break;
         case 0x03: // Write floppy
             break;
         case 0x41: // Supports LBA
-            EFLAGS.carry = false;
+            state->eflags.carry = false;
             break;
         case 0x42: // Read hard drive, extended LBA
         {
-            diskAddressPacket* packet = (diskAddressPacket*)(state->memory + SEGMEM(DS.r, ESI.r));
+            diskAddressPacket* packet = (diskAddressPacket*)(state->memory + SEGMEM(DS, state->esi));
             LOG_STREAM << std::endl << "INT 0x13 packet:" << std::endl;
             LOG_STREAM << " Size: " << PRINT_VALUE((uint32_t)packet->sizePacket) << std::endl;
             LOG_STREAM << " Sectors to transfer: " << PRINT_VALUE(packet->sectorTransferCount)
@@ -88,24 +88,29 @@ MAKE_OPCODE(CD)
             memcpy(addr, tempStorage, readAmount);
             delete tempStorage;
 
-            EFLAGS.carry = false;
-            EAX.h = 0;
+            state->eflags.carry = false;
+            GetUpperByte(state->eax) = 0;
             break;
         }
         };
         break;
     case 0x16: // Read from stdin
+    {
+        uint8_t readCharacter = 0;
 #ifdef _WIN32
-        EAX.l = _getch();
+        readCharacter = _getch();
 #else
-        EAX.l = getchar();
+        readCharacter = getchar();
 #endif
         // Remap line feed to carriage return
-        if (EAX.l == '\n')
-            EAX.l = '\r';
+        if (readCharacter == '\n')
+            readCharacter = '\r';
 
-        LOG_STREAM << " (Read " << utils::EscapeCharacter(EAX.l) << ")";
-        EAX.h = 0;
+        GetLowerByte(state->eax) = readCharacter;
+        GetUpperByte(state->eax) = 0;
+
+        LOG_STREAM << " (Read " << utils::EscapeCharacter(readCharacter) << ")";
         break;
+    }
     };
 }

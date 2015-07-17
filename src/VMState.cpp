@@ -60,9 +60,9 @@ void VMState::LoadBootsector()
         exit(-3);
     }
 
-    segment[1].r = 0;
-    general[8].r = 0x7C00;
-    memcpy(memory + SEGMEM(segment[1].r, general[8].r), bootsector, 512);
+    segment[1] = 0;
+    general[8] = 0x7C00;
+    memcpy(memory + SEGMEM(segment[1], general[8]), bootsector, 512);
     log << "[INIT] Succesfully loaded bootsector to 0x0000:0x7C00" << std::endl;
 }
 
@@ -71,6 +71,6 @@ void VMState::LogRegisters()
     VMState* state = this;
 
     for (int i = 0; i < 9; i++)
-        LOG_STREAM << R_Gn(i) << ": " << PRINT_VALUE(R_G(i).r) << " ";
+        LOG_STREAM << R_Gn(i) << ": " << PRINT_VALUE(R_G(i)) << " ";
     LOG_STREAM << std::endl;
 }

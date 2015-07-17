@@ -6,19 +6,19 @@ uint32_t arithmetic::Add(VMState* state, uint32_t a, uint32_t b)
     uint32_t value = a + b;
     if (value == 0)
     {
-        EFLAGS.zero = true;
+        state->eflags.zero = true;
     }
     else
     {
-        EFLAGS.zero = false;
+        state->eflags.zero = false;
     }
     if ((int32_t)value < 0)
     {
-        EFLAGS.sign = true;
+        state->eflags.sign = true;
     }
     else
     {
-        EFLAGS.sign = false;
+        state->eflags.sign = false;
     }
 
     return value;
@@ -29,19 +29,19 @@ uint32_t arithmetic::Sub(VMState* state, uint32_t a, uint32_t b)
     uint32_t value = a - b;
     if (value == 0)
     {
-        EFLAGS.zero = true;
+        state->eflags.zero = true;
     }
     else
     {
-        EFLAGS.zero = false;
+        state->eflags.zero = false;
     }
     if ((int32_t)value < 0)
     {
-        EFLAGS.sign = true;
+        state->eflags.sign = true;
     }
     else
     {
-        EFLAGS.sign = false;
+        state->eflags.sign = false;
     }
 
     return value;
@@ -52,23 +52,23 @@ uint32_t arithmetic::And(VMState* state, uint32_t a, uint32_t b)
     uint32_t value = a & b;
     if (value == 0)
     {
-        EFLAGS.zero = true;
+        state->eflags.zero = true;
     }
     else
     {
-        EFLAGS.zero = false;
+        state->eflags.zero = false;
     }
     if ((int32_t)value < 0)
     {
-        EFLAGS.sign = true;
+        state->eflags.sign = true;
     }
     else
     {
-        EFLAGS.sign = false;
+        state->eflags.sign = false;
     }
 
-    EFLAGS.overflow = false;
-    EFLAGS.carry = false;
+    state->eflags.overflow = false;
+    state->eflags.carry = false;
 
     return value;
 }
@@ -78,23 +78,23 @@ uint32_t arithmetic::Or(VMState* state, uint32_t a, uint32_t b)
     uint32_t value = a | b;
     if (value == 0)
     {
-        EFLAGS.zero = true;
+        state->eflags.zero = true;
     }
     else
     {
-        EFLAGS.zero = false;
+        state->eflags.zero = false;
     }
     if ((int32_t)value < 0)
     {
-        EFLAGS.sign = true;
+        state->eflags.sign = true;
     }
     else
     {
-        EFLAGS.sign = false;
+        state->eflags.sign = false;
     }
 
-    EFLAGS.overflow = false;
-    EFLAGS.carry = false;
+    state->eflags.overflow = false;
+    state->eflags.carry = false;
 
     return value;
 }
@@ -104,23 +104,23 @@ uint32_t arithmetic::Xor(VMState* state, uint32_t a, uint32_t b)
     uint32_t value = a ^ b;
     if (value == 0)
     {
-        EFLAGS.zero = true;
+        state->eflags.zero = true;
     }
     else
     {
-        EFLAGS.zero = false;
+        state->eflags.zero = false;
     }
     if ((int32_t)value < 0)
     {
-        EFLAGS.sign = true;
+        state->eflags.sign = true;
     }
     else
     {
-        EFLAGS.sign = false;
+        state->eflags.sign = false;
     }
 
-    EFLAGS.overflow = false;
-    EFLAGS.carry = false;
+    state->eflags.overflow = false;
+    state->eflags.carry = false;
 
     return value;
 }
@@ -130,23 +130,23 @@ uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
     uint32_t value = a << b;
     if (value == 0)
     {
-        EFLAGS.zero = true;
+        state->eflags.zero = true;
     }
     else
     {
-        EFLAGS.zero = false;
+        state->eflags.zero = false;
     }
     if ((int32_t)value < 0)
     {
-        EFLAGS.sign = true;
+        state->eflags.sign = true;
     }
     else
     {
-        EFLAGS.sign = false;
+        state->eflags.sign = false;
     }
 
-    EFLAGS.overflow = false;
-    EFLAGS.carry = false;
+    state->eflags.overflow = false;
+    state->eflags.carry = false;
 
     return value;
 }
@@ -155,7 +155,7 @@ uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
 MAKE_OPCODE(01)
 {
     ModRM mod(NEXT_INS(1));
-    R_G(mod.reg1).r = arithmetic::Add(state, R_G(mod.reg1).r, R_G(mod.reg2).r);
+    R_G(mod.reg1) = arithmetic::Add(state, R_G(mod.reg1), R_G(mod.reg2));
 }
 
 // add reg, [reg+disp]
@@ -164,8 +164,8 @@ MAKE_OPCODE(03)
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
     {
-        R_G(mod.reg2).r =
-            arithmetic::Add(state, R_G(mod.reg2).r, MEMORY(R_G(mod.reg1).r + (int8_t)NEXT_INS(2)));
+        R_G(mod.reg2) =
+            arithmetic::Add(state, R_G(mod.reg2), MEMORY(R_G(mod.reg1) + (int8_t)NEXT_INS(2)));
     }
 }
 
@@ -189,83 +189,83 @@ MAKE_OPCODE(30)
 
 MAKE_OPCODE(40)
 {
-    EAX.r = arithmetic::Add(state, EAX.r, 1);
+    state->eax = arithmetic::Add(state, state->eax, 1);
     LOG_STREAM << "eax";
 }
 MAKE_OPCODE(41)
 {
-    ECX.r = arithmetic::Add(state, ECX.r, 1);
+    state->ecx = arithmetic::Add(state, state->ecx, 1);
     LOG_STREAM << "ecx";
 }
 MAKE_OPCODE(42)
 {
-    EDX.r = arithmetic::Add(state, EDX.r, 1);
+    state->edx = arithmetic::Add(state, state->edx, 1);
     LOG_STREAM << "edx";
 }
 MAKE_OPCODE(43)
 {
-    EBX.r = arithmetic::Add(state, EBX.r, 1);
+    state->ebx = arithmetic::Add(state, state->ebx, 1);
     LOG_STREAM << "ebx";
 }
 MAKE_OPCODE(44)
 {
-    ESP.r = arithmetic::Add(state, ESP.r, 1);
+    state->esp = arithmetic::Add(state, state->esp, 1);
     LOG_STREAM << "esp";
 }
 MAKE_OPCODE(45)
 {
-    EBP.r = arithmetic::Add(state, EBP.r, 1);
+    state->ebp = arithmetic::Add(state, state->ebp, 1);
     LOG_STREAM << "ebp";
 }
 MAKE_OPCODE(46)
 {
-    ESI.r = arithmetic::Add(state, ESI.r, 1);
+    state->esi = arithmetic::Add(state, state->esi, 1);
     LOG_STREAM << "esi";
 }
 MAKE_OPCODE(47)
 {
-    EDI.r = arithmetic::Add(state, EDI.r, 1);
+    state->edi = arithmetic::Add(state, state->edi, 1);
     LOG_STREAM << "edi";
 }
 
 MAKE_OPCODE(48)
 {
-    EAX.r = arithmetic::Sub(state, EAX.r, 1);
+    state->eax = arithmetic::Sub(state, state->eax, 1);
     LOG_STREAM << "eax";
 }
 MAKE_OPCODE(49)
 {
-    ECX.r = arithmetic::Sub(state, ECX.r, 1);
+    state->ecx = arithmetic::Sub(state, state->ecx, 1);
     LOG_STREAM << "ecx";
 }
 MAKE_OPCODE(4A)
 {
-    EDX.r = arithmetic::Sub(state, EDX.r, 1);
+    state->edx = arithmetic::Sub(state, state->edx, 1);
     LOG_STREAM << "edx";
 }
 MAKE_OPCODE(4B)
 {
-    EBX.r = arithmetic::Sub(state, EBX.r, 1);
+    state->ebx = arithmetic::Sub(state, state->ebx, 1);
     LOG_STREAM << "ebx";
 }
 MAKE_OPCODE(4C)
 {
-    ESP.r = arithmetic::Sub(state, ESP.r, 1);
+    state->esp = arithmetic::Sub(state, state->esp, 1);
     LOG_STREAM << "esp";
 }
 MAKE_OPCODE(4D)
 {
-    EBP.r = arithmetic::Sub(state, EBP.r, 1);
+    state->ebp = arithmetic::Sub(state, state->ebp, 1);
     LOG_STREAM << "ebp";
 }
 MAKE_OPCODE(4E)
 {
-    ESI.r = arithmetic::Sub(state, ESI.r, 1);
+    state->esi = arithmetic::Sub(state, state->esi, 1);
     LOG_STREAM << "esi";
 }
 MAKE_OPCODE(4F)
 {
-    EDI.r = arithmetic::Sub(state, EDI.r, 1);
+    state->edi = arithmetic::Sub(state, state->edi, 1);
     LOG_STREAM << "edi";
 }
 
@@ -282,8 +282,8 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
-                state, MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
+            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
+                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -298,8 +298,8 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
-                state, MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
+            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
+                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), NEXT_INS(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -314,7 +314,7 @@ MAKE_OPCODE(80)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            arithmetic::Sub(state, MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))),
+            arithmetic::Sub(state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))),
                             NEXT_INS(2));
             break;
         case 3:
@@ -339,8 +339,8 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
-                state, MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))), ARG(2));
+            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Add(
+                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -355,8 +355,8 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
-                state, MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))), ARG(2));
+            MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))) = arithmetic::Sub(
+                state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -371,7 +371,7 @@ MAKE_OPCODE(81)
         {
         case 0:
             LOG_STREAM << '[' << R_LHn[mod.reg1] << ']';
-            arithmetic::Sub(state, MEMORY(SEGMEM(DS.r, GetLHRegister(state, mod.reg1))), ARG(2));
+            arithmetic::Sub(state, MEMORY(SEGMEM(DS, GetLHRegister(state, mod.reg1))), ARG(2));
             break;
         case 3:
             LOG_STREAM << R_LHn[mod.reg1];
@@ -391,7 +391,7 @@ MAKE_OPCODE(D1)
     switch (mod.reg2)
     {
     case 4:
-        R_G(mod.reg1).r = arithmetic::ShiftLeft(state, R_G(mod.reg1).r, 1);
+        R_G(mod.reg1) = arithmetic::ShiftLeft(state, R_G(mod.reg1), 1);
         break;
     };
 }
@@ -399,13 +399,13 @@ MAKE_OPCODE(D1)
 // clc
 MAKE_OPCODE(F8)
 {
-    EFLAGS.carry = false;
+    state->eflags.carry = false;
 }
 
 // stc
 MAKE_OPCODE(F9)
 {
-    EFLAGS.carry = true;
+    state->eflags.carry = true;
 }
 
 // inc/dec cl

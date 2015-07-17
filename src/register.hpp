@@ -4,38 +4,26 @@
 #include <iomanip>
 #include "utils.hpp"
 
-union Register16
+typedef uint16_t Register16;
+typedef uint32_t Register32;
+
+template <typename Ret, typename T>
+inline Ret& GetOffsetValue(T& value, int offset)
 {
-    struct
-    {
-        uint8_t l;
-        uint8_t h;
-    };
+    return *reinterpret_cast<Ret*>(reinterpret_cast<uint8_t*>(&value) + offset);
+}
 
-    uint16_t r;
-};
-
-union Register32
+template <typename T>
+inline uint8_t& GetLowerByte(T& value)
 {
-    struct
-    {
-        uint8_t l;
-        uint8_t h;
-    };
+    return GetOffsetValue<uint8_t>(value, 0);
+}
 
-    uint16_t r16;
-    uint32_t r;
-
-    Register32() :
-        r(0)
-    {
-    }
-
-    Register32(uint8_t _r) :
-        r(_r)
-    {
-    }
-};
+template <typename T>
+inline uint8_t& GetUpperByte(T& value)
+{
+    return GetOffsetValue<uint8_t>(value, 1);
+}
 
 struct RegisterEFLAGS
 {
@@ -100,20 +88,6 @@ union ModRM
 
 struct VMState;
 
-#define EAX (state->general[0]) // EAX - Accumulator Register
-#define ECX (state->general[1]) // ECX - Counter Register
-#define EDX (state->general[2]) // EDX - Data Register
-
-#define EBX (state->general[3]) // EBX - Base Register
-#define ESP (state->general[4]) // ESP - Stack Pointer
-#define EBP (state->general[5]) // EBP - Base Stack Pointer
-
-#define ESI (state->general[6]) // ESI - Source Index
-#define EDI (state->general[7]) // EDI - Destination Index
-#define EIP (state->general[8]) // EIP - Instruction Pointer
-
-#define EFLAGS (state->eflags) // EFLAGS - Flags
-
 #define ES (state->segment[0]) // ES - Extra Segment
 #define CS (state->segment[1]) // CS - Code Segment
 #define SS (state->segment[2]) // SS - Stack Segment
@@ -136,7 +110,7 @@ static const char* R_RCn16[8] = {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di",
 
 #define MEMORY(x) (state->memory[(x)])
 #define SEGMEM(seg, offset) (((seg)*16) + (offset))
-#define NEXT_INS(i) (MEMORY(EIP.r + (i)))
+#define NEXT_INS(i) (MEMORY(state->eip + (i)))
 #define CURR_INS (NEXT_INS(0))
 
 #define LOG_STREAM (state->log)
@@ -150,7 +124,7 @@ static const char* R_RCn16[8] = {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di",
                    NEXT_INS(offset + 3))
 // Converts the next two 8-bit integers (plus an offset) to one 16-bit integer
 #define ARG_16B(offset) CONV_8B_TO_16B(NEXT_INS(offset), NEXT_INS(offset + 1))
-// Converts a EIP offset to an integer, and outputs a value based on current CPU state
+// Converts an EIP offset to an integer, and outputs a value based on current CPU state
 #define ARG(offset) (state->CR0.protectedMode ? (int32_t)ARG_32B(offset) : (int16_t)ARG_16B(offset))
 
 // Converts the next four 8-bit integers in memory (with a given memory location) to one 32-bit

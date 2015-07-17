@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     state->CR0.protectedMode = false;
     state->CR0.emulation = true;
 
-    EFLAGS.direction = false;
+    state->eflags.direction = false;
 
     opcode opcodes[256];
     opcodesGenerate(opcodes);
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
                    << currOpcode.name.c_str();
 
         currOpcode.func(state, currOpcode);
-        EIP.r += currOpcode.GetFinalOffset(state);
+        state->eip += currOpcode.GetFinalOffset(state);
 
         LOG_STREAM << std::endl;
     }

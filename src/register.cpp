@@ -6,24 +6,24 @@ uint8_t& GetLHRegister(VMState* state, uint8_t index)
     switch (index)
     {
     case 0:
-        return EAX.l;
+        return GetLowerByte(state->eax);
     case 1:
-        return ECX.l;
+        return GetLowerByte(state->ecx);
     case 2:
-        return EDX.l;
+        return GetLowerByte(state->edx);
     case 3:
-        return EBX.l;
+        return GetLowerByte(state->ebx);
     case 4:
-        return EAX.h;
+        return GetUpperByte(state->eax);
     case 5:
-        return ECX.h;
+        return GetUpperByte(state->ecx);
     case 6:
-        return EDX.h;
+        return GetUpperByte(state->edx);
     case 7:
-        return EBX.h;
+        return GetUpperByte(state->ebx);
     };
 
-    return EAX.l;
+    return GetLowerByte(state->eax);
 }
 
 uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value)
@@ -31,21 +31,21 @@ uint8_t RegisterCombinationToMemoryAddress(VMState* state, uint8_t value)
     switch (value)
     {
     case 0:
-        return EBX.r + ESI.r;
+        return state->ebx + state->esi;
     case 1:
-        return EBX.r + EDI.r;
+        return state->ebx + state->edi;
     case 2:
-        return EBP.r + ESI.r;
+        return state->ebp + state->esi;
     case 3:
-        return EBP.r + EDI.r;
+        return state->ebp + state->edi;
     case 4:
-        return ESI.r;
+        return state->esi;
     case 5:
-        return EDI.r;
+        return state->edi;
     case 6:
-        return EBP.r;
+        return state->ebp;
     case 7:
-        return EBX.r;
+        return state->ebx;
     };
 
     return 0;
