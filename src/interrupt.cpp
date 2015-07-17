@@ -19,7 +19,7 @@ struct diskAddressPacket
     uint32_t upperLBA;    // Used for upper part of 48 bit LBAs
 };
 
-MAKE_OPCODE(CD)
+MAKE_OPCODE(0xCD)
 {
     LOG_STREAM << "0x" << (uint32_t)NEXT_INS(1);
     uint8_t driveNumber = GetLowerByte(state->edx) ^ 0x80;

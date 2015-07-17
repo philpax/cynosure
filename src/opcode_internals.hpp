@@ -3,46 +3,50 @@
 
 #include "VMState.hpp"
 
-struct opcode;
+struct Opcode;
 
-typedef void (*opcodeFunc)(VMState*, opcode&);
-#define MAKE_OPCODE(opc) void OP##_##opc(VMState* state, opcode& op)
+typedef void (*OpcodeFunc)(VMState*, Opcode&);
+#define MAKE_OPCODE(opc) void OP##_##opc(VMState* state, Opcode& op)
 #define DECL_OPCODE(opc, name, offset32, offset16)                                                 \
-    opcodes[0x##opc] = opcode(OP##_##opc, 0x##opc, name, offset32, offset16)
+    opcodes[opc] = Opcode(OP##_##opc, opc, name, offset32, offset16)
 
-struct opcode
+struct Opcode
 {
-    opcodeFunc func;    // Function pointer to the opcode handler
-    std::string name;   // Opcode name
-    uint8_t opc;        // Opcode associated with this
-    uint8_t offset32;   // 32 bit translation
-    uint8_t offset16;   // 16 bit translation
-    uint8_t ins_offset; // state->eip translation: for when this particular opcode needs a different
-                        // translation
+    OpcodeFunc func;        // Function pointer to the opcode handler
+    std::string name;       // Opcode name
+    uint8_t opcode = 0;     // Opcode associated with this
+    uint8_t offset32 = 0;   // 32 bit translation
+    uint8_t offset16 = 0;   // 16 bit translation
+    uint8_t insnOffset = 0; // state->eip translation: for when this particular opcode needs a different
+                            // translation
+
     uint8_t GetOffset(VMState* state)
     {
         if (state->CR0.protectedMode)
-        {
-            return offset32 + ins_offset;
-        }
+            return offset32 + insnOffset;
         else
-        {
-            return offset16 + ins_offset;
-        }
+            return offset16 + insnOffset;
     }
+
     uint8_t GetFinalOffset(VMState* state)
     {
         uint8_t offset = GetOffset(state);
-        ins_offset = 0;
+        insnOffset = 0;
         return offset;
     }
-    opcode() : func(0), opc(0), offset32(0), offset16(0), ins_offset(0)
+
+    Opcode()
     {
     }
-    opcode(opcodeFunc _func, uint8_t _opcode, std::string _name, uint8_t _offset32,
-           uint8_t _offset16)
-        : func(_func), opc(_opcode), name(_name), offset32(_offset32), offset16(_offset16),
-          ins_offset(0){};
+
+    Opcode(OpcodeFunc func, uint8_t opcode, std::string name, uint8_t offset32, uint8_t offset16) :
+        func(func),
+        opcode(opcode),
+        name(name),
+        offset32(offset32),
+        offset16(offset16)
+    {
+    }
 };
 
 #endif

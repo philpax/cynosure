@@ -68,14 +68,14 @@ uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
 }
 
 // add reg, reg
-MAKE_OPCODE(01)
+MAKE_OPCODE(0x01)
 {
     ModRM mod(NEXT_INS(1));
     state->general[mod.reg1] = arithmetic::Add(state, state->general[mod.reg1], state->general[mod.reg2]);
 }
 
 // add reg, [reg+disp]
-MAKE_OPCODE(03)
+MAKE_OPCODE(0x03)
 {
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 1)
@@ -86,7 +86,7 @@ MAKE_OPCODE(03)
 }
 
 // or reg8, reg8
-MAKE_OPCODE(08)
+MAKE_OPCODE(0x08)
 {
     ModRM mod(NEXT_INS(1));
     LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
@@ -95,7 +95,7 @@ MAKE_OPCODE(08)
 }
 
 // xor reg8, reg8
-MAKE_OPCODE(30)
+MAKE_OPCODE(0x30)
 {
     ModRM mod(NEXT_INS(1));
     LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
@@ -103,90 +103,90 @@ MAKE_OPCODE(30)
         arithmetic::Xor(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
 }
 
-MAKE_OPCODE(40)
+MAKE_OPCODE(0x40)
 {
     state->eax = arithmetic::Add(state, state->eax, 1);
     LOG_STREAM << "eax";
 }
-MAKE_OPCODE(41)
+MAKE_OPCODE(0x41)
 {
     state->ecx = arithmetic::Add(state, state->ecx, 1);
     LOG_STREAM << "ecx";
 }
-MAKE_OPCODE(42)
+MAKE_OPCODE(0x42)
 {
     state->edx = arithmetic::Add(state, state->edx, 1);
     LOG_STREAM << "edx";
 }
-MAKE_OPCODE(43)
+MAKE_OPCODE(0x43)
 {
     state->ebx = arithmetic::Add(state, state->ebx, 1);
     LOG_STREAM << "ebx";
 }
-MAKE_OPCODE(44)
+MAKE_OPCODE(0x44)
 {
     state->esp = arithmetic::Add(state, state->esp, 1);
     LOG_STREAM << "esp";
 }
-MAKE_OPCODE(45)
+MAKE_OPCODE(0x45)
 {
     state->ebp = arithmetic::Add(state, state->ebp, 1);
     LOG_STREAM << "ebp";
 }
-MAKE_OPCODE(46)
+MAKE_OPCODE(0x46)
 {
     state->esi = arithmetic::Add(state, state->esi, 1);
     LOG_STREAM << "esi";
 }
-MAKE_OPCODE(47)
+MAKE_OPCODE(0x47)
 {
     state->edi = arithmetic::Add(state, state->edi, 1);
     LOG_STREAM << "edi";
 }
 
-MAKE_OPCODE(48)
+MAKE_OPCODE(0x48)
 {
     state->eax = arithmetic::Sub(state, state->eax, 1);
     LOG_STREAM << "eax";
 }
-MAKE_OPCODE(49)
+MAKE_OPCODE(0x49)
 {
     state->ecx = arithmetic::Sub(state, state->ecx, 1);
     LOG_STREAM << "ecx";
 }
-MAKE_OPCODE(4A)
+MAKE_OPCODE(0x4A)
 {
     state->edx = arithmetic::Sub(state, state->edx, 1);
     LOG_STREAM << "edx";
 }
-MAKE_OPCODE(4B)
+MAKE_OPCODE(0x4B)
 {
     state->ebx = arithmetic::Sub(state, state->ebx, 1);
     LOG_STREAM << "ebx";
 }
-MAKE_OPCODE(4C)
+MAKE_OPCODE(0x4C)
 {
     state->esp = arithmetic::Sub(state, state->esp, 1);
     LOG_STREAM << "esp";
 }
-MAKE_OPCODE(4D)
+MAKE_OPCODE(0x4D)
 {
     state->ebp = arithmetic::Sub(state, state->ebp, 1);
     LOG_STREAM << "ebp";
 }
-MAKE_OPCODE(4E)
+MAKE_OPCODE(0x4E)
 {
     state->esi = arithmetic::Sub(state, state->esi, 1);
     LOG_STREAM << "esi";
 }
-MAKE_OPCODE(4F)
+MAKE_OPCODE(0x4F)
 {
     state->edi = arithmetic::Sub(state, state->edi, 1);
     LOG_STREAM << "edi";
 }
 
 // add/sub/cmp reg8, imm8
-MAKE_OPCODE(80)
+MAKE_OPCODE(0x80)
 {
     ModRM mod(NEXT_INS(1));
 
@@ -243,7 +243,7 @@ MAKE_OPCODE(80)
 }
 
 // add/sub/cmp reg, imm16/32
-MAKE_OPCODE(81)
+MAKE_OPCODE(0x81)
 {
     ModRM mod(NEXT_INS(1));
 
@@ -302,7 +302,7 @@ MAKE_OPCODE(81)
 }
 
 // rol/ror/rcl/rcr/shl/shr/shl/sar reg, 1
-MAKE_OPCODE(D1)
+MAKE_OPCODE(0xD1)
 {
     ModRM mod(NEXT_INS(1));
     switch (mod.reg2)
@@ -314,19 +314,19 @@ MAKE_OPCODE(D1)
 }
 
 // clc
-MAKE_OPCODE(F8)
+MAKE_OPCODE(0xF8)
 {
     state->eflags.carry = false;
 }
 
 // stc
-MAKE_OPCODE(F9)
+MAKE_OPCODE(0xF9)
 {
     state->eflags.carry = true;
 }
 
 // inc/dec cl
-MAKE_OPCODE(FE)
+MAKE_OPCODE(0xFE)
 {
     ModRM mod(NEXT_INS(1));
     switch (mod.reg2)

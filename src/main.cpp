@@ -27,19 +27,19 @@ int main(int argc, char** argv)
 
     state->eflags.direction = false;
 
-    opcode opcodes[256];
+    Opcode opcodes[256];
     opcodesGenerate(opcodes);
 
     state->running = true;
     while (state->running)
     {
-        opcode currOpcode = opcodes[CURR_INS];
+        Opcode opcode = opcodes[CURR_INS];
 
-        LOG_STREAM << "0x" << std::setw(2) << std::hex << (uint32_t)currOpcode.opc << ": "
-                   << currOpcode.name.c_str();
+        LOG_STREAM << "0x" << std::setw(2) << std::hex << (uint32_t)opcode.opcode << ": "
+                   << opcode.name;
 
-        currOpcode.func(state, currOpcode);
-        state->eip += currOpcode.GetFinalOffset(state);
+        opcode.func(state, opcode);
+        state->eip += opcode.GetFinalOffset(state);
 
         LOG_STREAM << std::endl;
     }

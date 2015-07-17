@@ -2,7 +2,7 @@
 #include "opcodes.hpp"
 
 // cmp reg8, reg8
-MAKE_OPCODE(38)
+MAKE_OPCODE(0x38)
 {
     ModRM mod(NEXT_INS(1));
     switch (mod.mod)
@@ -18,21 +18,21 @@ MAKE_OPCODE(38)
 }
 
 // cmp al, imm8
-MAKE_OPCODE(3C)
+MAKE_OPCODE(0x3C)
 {
     LOG_STREAM << "al, " << PRINT_VALUE((int32_t)NEXT_INS(1));
     arithmetic::Sub(state, GetLowerByte(state->eax), NEXT_INS(1));
 }
 
 // cmp eax, imm32
-MAKE_OPCODE(3D)
+MAKE_OPCODE(0x3D)
 {
     LOG_STREAM << state->GetRegisterName(0) << " " << PRINT_VALUE(ARG(1));
     arithmetic::Sub(state, state->eax, ARG(1));
 }
 
 // jc/jb imm8
-MAKE_OPCODE(72)
+MAKE_OPCODE(0x72)
 {
     LOG_STREAM << PRINT_VALUE((int32_t)NEXT_INS(1));
     if (state->eflags.carry)
@@ -43,7 +43,7 @@ MAKE_OPCODE(72)
 }
 
 // jz/je imm8
-MAKE_OPCODE(74)
+MAKE_OPCODE(0x74)
 {
     LOG_STREAM << PRINT_VALUE((int32_t)NEXT_INS(1));
     if (state->eflags.zero)
@@ -54,7 +54,7 @@ MAKE_OPCODE(74)
 }
 
 // jnz/jne imm8
-MAKE_OPCODE(75)
+MAKE_OPCODE(0x75)
 {
     LOG_STREAM << PRINT_VALUE((int32_t)NEXT_INS(1));
     if (!state->eflags.zero)
@@ -65,18 +65,18 @@ MAKE_OPCODE(75)
 }
 
 // nop
-MAKE_OPCODE(90)
+MAKE_OPCODE(0x90)
 {
 }
 
 // ret
-MAKE_OPCODE(C3)
+MAKE_OPCODE(0xC3)
 {
     state->eip = state->Pop();
 }
 
 // jmp seg16:off16
-MAKE_OPCODE(EA)
+MAKE_OPCODE(0xEA)
 {
     uint16_t segment = ARG_16B(3);
     uint16_t offset = ARG_16B(1);
@@ -87,7 +87,7 @@ MAKE_OPCODE(EA)
 }
 
 // call imm32
-MAKE_OPCODE(E8)
+MAKE_OPCODE(0xE8)
 {
     int32_t argument = ARG(1);
 
@@ -97,7 +97,7 @@ MAKE_OPCODE(E8)
 }
 
 // jmp imm32
-MAKE_OPCODE(E9)
+MAKE_OPCODE(0xE9)
 {
     int32_t argument = ARG(1);
 
