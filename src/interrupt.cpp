@@ -23,10 +23,10 @@ public:
 
 MAKE_OPCODE(0xCD)
 {
-    Log << "0x" << (uint32_t)NEXT_INS(1);
+    Log << "0x" << (uint32_t)state->ReadIPRelative(1);
     uint8_t driveNumber = GetLowerByte(state->edx) ^ 0x80;
 
-    switch (NEXT_INS(1))
+    switch (state->ReadIPRelative(1))
     {
     case 0x10: // Display characters
         switch (GetUpperByte(state->eax))

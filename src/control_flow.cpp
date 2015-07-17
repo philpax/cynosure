@@ -4,7 +4,7 @@
 // cmp reg8, reg8
 MAKE_OPCODE(0x38)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
 
     auto& reg1 = GetRegister8(state, mod.reg1);
     auto& reg2 = GetRegister8(state, mod.reg2);
@@ -23,8 +23,8 @@ MAKE_OPCODE(0x38)
 // cmp al, imm8
 MAKE_OPCODE(0x3C)
 {
-    Log << "al, " << PRINT_VALUE((int32_t)NEXT_INS(1));
-    arithmetic::Sub(state, GetLowerByte(state->eax), NEXT_INS(1));
+    Log << "al, " << PRINT_VALUE((int32_t)state->ReadIPRelative(1));
+    arithmetic::Sub(state, GetLowerByte(state->eax), state->ReadIPRelative(1));
 }
 
 // cmp eax, imm32
@@ -39,10 +39,10 @@ MAKE_OPCODE(0x3D)
 // jc/jb imm8
 MAKE_OPCODE(0x72)
 {
-    Log << PRINT_VALUE((int32_t)NEXT_INS(1));
+    Log << PRINT_VALUE((int32_t)state->ReadIPRelative(1));
     if (state->eflags.carry)
     {
-        state->eip += (int8_t)NEXT_INS(1);
+        state->eip += (int8_t)state->ReadIPRelative(1);
         Log << std::endl;
     }
 }
@@ -50,10 +50,10 @@ MAKE_OPCODE(0x72)
 // jz/je imm8
 MAKE_OPCODE(0x74)
 {
-    Log << PRINT_VALUE((int32_t)NEXT_INS(1));
+    Log << PRINT_VALUE((int32_t)state->ReadIPRelative(1));
     if (state->eflags.zero)
     {
-        state->eip += (int8_t)NEXT_INS(1);
+        state->eip += (int8_t)state->ReadIPRelative(1);
         Log << std::endl;
     }
 }
@@ -61,10 +61,10 @@ MAKE_OPCODE(0x74)
 // jnz/jne imm8
 MAKE_OPCODE(0x75)
 {
-    Log << PRINT_VALUE((int32_t)NEXT_INS(1));
+    Log << PRINT_VALUE((int32_t)state->ReadIPRelative(1));
     if (!state->eflags.zero)
     {
-        state->eip += (int8_t)NEXT_INS(1);
+        state->eip += (int8_t)state->ReadIPRelative(1);
         Log << std::endl;
     }
 }

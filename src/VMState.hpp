@@ -83,6 +83,7 @@ struct VMState
     }
 
     int32_t ReadImmediate(uint32_t location);
+    uint8_t& ReadIPRelative(int32_t offset);
 
     void Push(uint32_t value);
     uint32_t Pop();

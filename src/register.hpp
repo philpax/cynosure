@@ -90,8 +90,6 @@ union ModRM
 };
 
 #define MEMORY(x) (state->memory[(x)])
-#define NEXT_INS(i) (MEMORY(state->eip + (i)))
-#define CURR_INS (NEXT_INS(0))
 
 #define Log (state->log)
 

@@ -100,6 +100,11 @@ int32_t VMState::ReadImmediate(uint32_t location)
         return Read<int16_t>(location);
 }
 
+uint8_t& VMState::ReadIPRelative(int32_t offset)
+{
+    return Read<uint8_t>(eip + offset);
+}
+
 // Stack instructions
 void VMState::Push(uint32_t value)
 {

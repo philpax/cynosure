@@ -70,25 +70,25 @@ uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
 // add reg, reg
 MAKE_OPCODE(0x01)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
     state->general[mod.reg1] = arithmetic::Add(state, state->general[mod.reg1], state->general[mod.reg2]);
 }
 
 // add reg, [reg+disp]
 MAKE_OPCODE(0x03)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
     if (mod.mod == 1)
     {
         state->general[mod.reg2] =
-            arithmetic::Add(state, state->general[mod.reg2], MEMORY(state->general[mod.reg1] + (int8_t)NEXT_INS(2)));
+            arithmetic::Add(state, state->general[mod.reg2], MEMORY(state->general[mod.reg1] + (int8_t)state->ReadIPRelative(2)));
     }
 }
 
 // or reg8, reg8
 MAKE_OPCODE(0x08)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
     Log << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
     GetRegister8(state, mod.reg1) =
         arithmetic::Or(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
@@ -97,7 +97,7 @@ MAKE_OPCODE(0x08)
 // xor reg8, reg8
 MAKE_OPCODE(0x30)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
     Log << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
     GetRegister8(state, mod.reg1) =
         arithmetic::Xor(state, GetRegister8(state, mod.reg1), GetRegister8(state, mod.reg2));
@@ -188,7 +188,7 @@ MAKE_OPCODE(0x4F)
 // add/sub/cmp reg8, imm8
 MAKE_OPCODE(0x80)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
 
     auto immediate = state->Read<uint8_t>(state->eip + 2);
     auto& reg1 = GetRegister8(state, mod.reg1);
@@ -244,7 +244,7 @@ MAKE_OPCODE(0x80)
 // add/sub/cmp reg, imm16/32
 MAKE_OPCODE(0x81)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
 
     auto immediate = state->ReadImmediate(state->eip + 2);
     auto& value = state->Read<int32_t>(state->ds, GetRegister8(state, mod.reg1));
@@ -301,7 +301,7 @@ MAKE_OPCODE(0x81)
 // rol/ror/rcl/rcr/shl/shr/shl/sar reg, 1
 MAKE_OPCODE(0xD1)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
     switch (mod.reg2)
     {
     case 4:
@@ -325,7 +325,7 @@ MAKE_OPCODE(0xF9)
 // inc/dec cl
 MAKE_OPCODE(0xFE)
 {
-    ModRM mod(NEXT_INS(1));
+    ModRM mod(state->ReadIPRelative(1));
     switch (mod.reg2)
     {
     case 0:

@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     state->running = true;
     while (state->running)
     {
-        Opcode opcode = opcodes[CURR_INS];
+        Opcode opcode = opcodes[state->ReadIPRelative(0)];
 
         Log << "0x" << std::setw(2) << std::hex << (uint32_t)opcode.opcode << ": "
                    << opcode.name;
