@@ -87,7 +87,7 @@ MAKE_OPCODE(0xEA)
     auto offset = state->Read<uint16_t>(state->eip + 1);
 
     state->cs = segment;
-    state->eip = SEGMEM(segment, offset);
+    state->eip = segment * 16 + offset;
     Log << PRINT_VALUE(segment) << ':' << PRINT_VALUE(offset);
 }
 

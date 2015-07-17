@@ -76,11 +76,14 @@ MAKE_OPCODE(0x89)
     switch (mod.mod)
     {
     case 1:
-        Log << "[" << state->GetRegisterName(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
+    {
+        auto disp = static_cast<int32_t>(NEXT_INS(2));
+        Log << "[" << state->GetRegisterName(mod.reg1) << '+' << disp << "], "
                    << state->GetRegisterName(mod.reg2);
-        state->Write(SEGMEM(state->ds, state->general[mod.reg1] + (int8_t)NEXT_INS(2)), state->general[mod.reg2]);
+        state->Write(state->ds * 16 + (state->general[mod.reg1] + disp), state->general[mod.reg2]);
         op.insnOffset++;
         break;
+    }
     case 3:
         Log << state->GetRegisterName(mod.reg1) << ", " << state->GetRegisterName(mod.reg2);
         state->general[mod.reg1] = state->general[mod.reg2];
@@ -98,7 +101,7 @@ MAKE_OPCODE(0x8A)
     case 0:
         Log << state->GetByteRegisterName(mod.reg2) << ", [" << state->GetRegisterCombinationName(mod.reg1) << "]";
         GetRegister8(state, mod.reg2) =
-            MEMORY(SEGMEM(state->ds, RegisterCombinationToMemoryAddress(state, mod.reg1)));
+            state->Read<uint8_t>(state->ds, RegisterCombinationToMemoryAddress(state, mod.reg1));
         break;
     case 3:
         Log << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
@@ -107,14 +110,15 @@ MAKE_OPCODE(0x8A)
     };
 }
 
-// mov reg, [reg+disp] (note: reg1 and reg2 are swapped in the modr/m byte for some reason. wtf,
-// intel?)
+// mov reg, [reg+disp]
 MAKE_OPCODE(0x8B)
 {
     ModRM mod(NEXT_INS(1));
+
     if (mod.mod == 1)
     {
-        state->general[mod.reg2] = MEMORY(SEGMEM(state->ds, state->general[mod.reg1] + (int8_t)NEXT_INS(2)));
+        auto offset = state->general[mod.reg1] + (int8_t)NEXT_INS(2);
+        state->general[mod.reg2] = state->Read<uint32_t>(state->ds, offset);
     }
 }
 

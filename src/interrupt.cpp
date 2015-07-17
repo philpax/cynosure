@@ -6,10 +6,12 @@
 #include <conio.h>
 #endif
 
-struct diskAddressPacket
+struct DiskAddressPacket
 {
     uint8_t sizePacket;           // Size of packet (16 bytes)
+private:
     uint8_t _padding;             // Always 0
+public:
     uint16_t sectorTransferCount; // Number of sectors to transfer
 
     uint16_t offsetAddr;  // The 16-bit offset, used with...
@@ -46,7 +48,7 @@ MAKE_OPCODE(0xCD)
             uint8_t sector = GetLowerByte(state->ecx);
             uint8_t head = GetUpperByte(state->edx);
 
-            uint8_t* addr = (uint8_t*)(state->memory + SEGMEM(state->es, state->ebx));
+            uint8_t* addr = &state->Read<uint8_t>(state->es, state->ebx);
             // LBA = ((C * HPC) + H) * SPT + S - 1
             uint32_t LBA = ((cylinder * 2) + head) * 18 + sector - 1;
             uint32_t readAmount = sectorCount * 512;
@@ -68,8 +70,7 @@ MAKE_OPCODE(0xCD)
             break;
         case 0x42: // Read hard drive, extended LBA
         {
-            diskAddressPacket* packet =
-                (diskAddressPacket*)(state->memory + SEGMEM(state->ds, state->esi));
+            auto packet = &state->Read<DiskAddressPacket>(state->ds, state->esi);
             Log << std::endl << "INT 0x13 packet:" << std::endl;
             Log << " Size: " << PRINT_VALUE((uint32_t)packet->sizePacket) << std::endl;
             Log << " Sectors to transfer: " << PRINT_VALUE(packet->sectorTransferCount)
@@ -81,8 +82,7 @@ MAKE_OPCODE(0xCD)
             // Lazy hack: assume a sector is 512 bytes
             uint32_t readAmount = packet->sectorTransferCount * 512;
 
-            uint8_t* addr =
-                (uint8_t*)(state->memory + SEGMEM(packet->segmentAddr, packet->offsetAddr));
+            uint8_t* addr = &state->Read<uint8_t>(packet->segmentAddr, packet->offsetAddr);;
             uint8_t* tempStorage = new uint8_t[readAmount];
             state->HDD[driveNumber]->seekg((packet->startingLBA - 1) * 512);
             state->HDD[driveNumber]->read((char*)tempStorage, readAmount);

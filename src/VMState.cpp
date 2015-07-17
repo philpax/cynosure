@@ -146,6 +146,8 @@ void VMState::LoadBootsector()
 
     segment[1] = 0;
     general[8] = 0x7C00;
-    memcpy(memory + SEGMEM(segment[1], general[8]), bootsector, 512);
+
+    void* destination = reinterpret_cast<void*>(&Read<uint8_t>(segment[1], general[8]));
+    memcpy(destination, bootsector, 512);
     log << "[INIT] Succesfully loaded bootsector to 0x0000:0x7C00" << std::endl;
 }

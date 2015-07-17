@@ -90,7 +90,6 @@ union ModRM
 };
 
 #define MEMORY(x) (state->memory[(x)])
-#define SEGMEM(seg, offset) (((seg)*16) + (offset))
 #define NEXT_INS(i) (MEMORY(state->eip + (i)))
 #define CURR_INS (NEXT_INS(0))
 

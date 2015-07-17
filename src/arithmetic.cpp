@@ -190,6 +190,10 @@ MAKE_OPCODE(0x80)
 {
     ModRM mod(NEXT_INS(1));
 
+    auto immediate = state->Read<uint8_t>(state->eip + 2);
+    auto& reg1 = GetRegister8(state, mod.reg1);
+    auto& value = state->Read<int32_t>(state->ds, reg1);
+
     switch (mod.reg2)
     {
     case 0:
@@ -198,13 +202,11 @@ MAKE_OPCODE(0x80)
         {
         case 0:
             Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Add(
-                state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), NEXT_INS(2));
+            value = arithmetic::Add(state, value, immediate);
             break;
         case 3:
             Log << state->GetByteRegisterName(mod.reg1);
-            GetRegister8(state, mod.reg1) =
-                arithmetic::Add(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
+            reg1 = arithmetic::Add(state, reg1, immediate);
             break;
         };
         break;
@@ -214,13 +216,11 @@ MAKE_OPCODE(0x80)
         {
         case 0:
             Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))) = arithmetic::Sub(
-                state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))), NEXT_INS(2));
+            value = arithmetic::Sub(state, value, immediate);
             break;
         case 3:
             Log << state->GetByteRegisterName(mod.reg1);
-            GetRegister8(state, mod.reg1) =
-                arithmetic::Sub(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
+            reg1 = arithmetic::Sub(state, reg1, immediate);
             break;
         };
         break;
@@ -230,12 +230,11 @@ MAKE_OPCODE(0x80)
         {
         case 0:
             Log << '[' << state->GetByteRegisterName(mod.reg1) << ']';
-            arithmetic::Sub(state, MEMORY(SEGMEM(state->ds, GetRegister8(state, mod.reg1))),
-                            NEXT_INS(2));
+            arithmetic::Sub(state, value, immediate);
             break;
         case 3:
             Log << state->GetByteRegisterName(mod.reg1);
-            arithmetic::Sub(state, GetRegister8(state, mod.reg1), NEXT_INS(2));
+            arithmetic::Sub(state, reg1, immediate);
             break;
         };
         break;
