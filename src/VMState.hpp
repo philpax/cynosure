@@ -6,10 +6,6 @@
 
 struct VMState
 {
-  private:
-    void InitializeHDD();
-    void LoadBootsector();
-
   public:
     VMState(std::string floppyDisk, std::string logFilename, uint32_t memorySize);
     ~VMState();
@@ -60,4 +56,28 @@ struct VMState
 
     std::fstream floppy;
     std::vector<std::fstream*> HDD;
+
+    // Memory functions
+    void Write(uint32_t location, void const* data, size_t count);
+
+    template <typename T>
+    void Write(uint32_t location, T const& value)
+    {
+        Write(location, &value, sizeof(value));
+    }
+
+    template <typename T>
+    T& Read(uint32_t location)
+    {
+        return *reinterpret_cast<T*>(&memory[location]);
+    }
+
+    int32_t ReadImmediate(uint32_t location);
+
+    void Push(uint32_t value);
+    uint32_t Pop();
+
+  private:
+    void InitializeHDD();
+    void LoadBootsector();
 };

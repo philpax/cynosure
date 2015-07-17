@@ -1,5 +1,5 @@
 #include "arithmetic.hpp"
-#include "memory.hpp"
+#include "opcodes.hpp"
 
 uint32_t arithmetic::Add(VMState* state, uint32_t a, uint32_t b)
 {

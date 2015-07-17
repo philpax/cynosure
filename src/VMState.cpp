@@ -31,6 +31,39 @@ VMState::~VMState()
     floppy.close();
 }
 
+// Helper function
+void VMState::Write(uint32_t location, void const* data, size_t count)
+{
+    memcpy(&memory[location], data, count);
+    log << "[MEMORY] Wrote " << count << " bytes to " << location;
+}
+
+int32_t VMState::ReadImmediate(uint32_t location)
+{
+    if (CR0.protectedMode)
+        return Read<int32_t>(location);
+    else
+        return Read<int16_t>(location);
+}
+
+// Stack instructions
+void VMState::Push(uint32_t value)
+{
+    esp -= (CR0.protectedMode ? 4 : 2);
+    log << std::endl;
+    Write(esp, value);
+
+    log << std::endl << "[STACK] Pushed: " << value << " to " << esp;
+}
+
+uint32_t VMState::Pop()
+{
+    uint32_t value = ReadImmediate(esp);
+    log << std::endl << "[STACK] Popped: " << value << " from " << esp;
+    esp += (CR0.protectedMode ? 4 : 2);
+    return value;
+}
+
 void VMState::InitializeHDD()
 {
     /*

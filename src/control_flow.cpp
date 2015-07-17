@@ -1,5 +1,5 @@
 #include "control_flow.hpp"
-#include "memory.hpp"
+#include "opcodes.hpp"
 
 // cmp reg8, reg8
 MAKE_OPCODE(38)
@@ -72,7 +72,7 @@ MAKE_OPCODE(90)
 // ret
 MAKE_OPCODE(C3)
 {
-    state->eip = memory::Pop(state);
+    state->eip = state->Pop();
 }
 
 // jmp seg16:off16
@@ -91,7 +91,7 @@ MAKE_OPCODE(E8)
 {
     int32_t argument = ARG(1);
 
-    memory::Push(state, state->eip + op.GetOffset(state));
+    state->Push(state->eip + op.GetOffset(state));
     state->eip += argument;
     LOG_STREAM << argument << std::endl;
 }
