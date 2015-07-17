@@ -1,25 +1,16 @@
 #include "arithmetic.hpp"
 #include "opcodes.hpp"
 
+void UpdateEFLAGS(VMState* state, uint32_t value)
+{
+    state->eflags.zero = value == 0;
+    state->eflags.sign = static_cast<int32_t>(value) < 0;
+}
+
 uint32_t arithmetic::Add(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a + b;
-    if (value == 0)
-    {
-        state->eflags.zero = true;
-    }
-    else
-    {
-        state->eflags.zero = false;
-    }
-    if ((int32_t)value < 0)
-    {
-        state->eflags.sign = true;
-    }
-    else
-    {
-        state->eflags.sign = false;
-    }
+    UpdateEFLAGS(state, value);
 
     return value;
 }
@@ -27,22 +18,7 @@ uint32_t arithmetic::Add(VMState* state, uint32_t a, uint32_t b)
 uint32_t arithmetic::Sub(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a - b;
-    if (value == 0)
-    {
-        state->eflags.zero = true;
-    }
-    else
-    {
-        state->eflags.zero = false;
-    }
-    if ((int32_t)value < 0)
-    {
-        state->eflags.sign = true;
-    }
-    else
-    {
-        state->eflags.sign = false;
-    }
+    UpdateEFLAGS(state, value);
 
     return value;
 }
@@ -50,22 +26,7 @@ uint32_t arithmetic::Sub(VMState* state, uint32_t a, uint32_t b)
 uint32_t arithmetic::And(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a & b;
-    if (value == 0)
-    {
-        state->eflags.zero = true;
-    }
-    else
-    {
-        state->eflags.zero = false;
-    }
-    if ((int32_t)value < 0)
-    {
-        state->eflags.sign = true;
-    }
-    else
-    {
-        state->eflags.sign = false;
-    }
+    UpdateEFLAGS(state, value);
 
     state->eflags.overflow = false;
     state->eflags.carry = false;
@@ -76,22 +37,7 @@ uint32_t arithmetic::And(VMState* state, uint32_t a, uint32_t b)
 uint32_t arithmetic::Or(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a | b;
-    if (value == 0)
-    {
-        state->eflags.zero = true;
-    }
-    else
-    {
-        state->eflags.zero = false;
-    }
-    if ((int32_t)value < 0)
-    {
-        state->eflags.sign = true;
-    }
-    else
-    {
-        state->eflags.sign = false;
-    }
+    UpdateEFLAGS(state, value);
 
     state->eflags.overflow = false;
     state->eflags.carry = false;
@@ -102,22 +48,7 @@ uint32_t arithmetic::Or(VMState* state, uint32_t a, uint32_t b)
 uint32_t arithmetic::Xor(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a ^ b;
-    if (value == 0)
-    {
-        state->eflags.zero = true;
-    }
-    else
-    {
-        state->eflags.zero = false;
-    }
-    if ((int32_t)value < 0)
-    {
-        state->eflags.sign = true;
-    }
-    else
-    {
-        state->eflags.sign = false;
-    }
+    UpdateEFLAGS(state, value);
 
     state->eflags.overflow = false;
     state->eflags.carry = false;
@@ -128,22 +59,7 @@ uint32_t arithmetic::Xor(VMState* state, uint32_t a, uint32_t b)
 uint32_t arithmetic::ShiftLeft(VMState* state, uint32_t a, uint32_t b)
 {
     uint32_t value = a << b;
-    if (value == 0)
-    {
-        state->eflags.zero = true;
-    }
-    else
-    {
-        state->eflags.zero = false;
-    }
-    if ((int32_t)value < 0)
-    {
-        state->eflags.sign = true;
-    }
-    else
-    {
-        state->eflags.sign = false;
-    }
+    UpdateEFLAGS(state, value);
 
     state->eflags.overflow = false;
     state->eflags.carry = false;
