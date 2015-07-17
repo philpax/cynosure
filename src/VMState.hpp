@@ -10,6 +10,10 @@ struct VMState
     VMState(std::string floppyDisk, std::string logFilename, uint32_t memorySize);
     ~VMState();
 
+    char const* GetByteRegisterName(uint8_t index);
+    char const* GetRegisterName(uint8_t index);
+    char const* GetSegmentName(uint8_t index);
+    char const* GetRegisterCombinationName(uint8_t index);
     void LogRegisters();
 
     union

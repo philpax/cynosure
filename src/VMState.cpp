@@ -31,6 +31,59 @@ VMState::~VMState()
     floppy.close();
 }
 
+char const* VMState::GetByteRegisterName(uint8_t index)
+{
+    static char const* names8[9] =
+        {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
+
+    return names8[index];
+}
+
+char const* VMState::GetRegisterName(uint8_t index)
+{
+    static char const* names16[9] =
+        {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di", "ip"};
+    static char const* names32[9] =
+        {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi", "eip"};
+    static char const* names8[9] =
+        {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
+
+    if (CR0.protectedMode)
+        return names32[index];
+    else
+        return names16[index];
+}
+
+char const* VMState::GetSegmentName(uint8_t index)
+{
+    static char const* names[6] = {"es", "cs", "ss", "ds", "fs", "gs"};
+
+    return names[index];
+}
+
+char const* VMState::GetRegisterCombinationName(uint8_t index)
+{
+    static char const* names32[8] =
+        {"ebx+esi", "ebx+edi", "ebp+esi", "ebp+edi", "esi", "edi", "ebp", "ebx"};
+    static char const* names16[8] =
+        {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di", "bp", "bx"};
+
+    if (CR0.protectedMode)
+        return names32[index];
+    else
+        return names16[index];
+}
+
+void VMState::LogRegisters()
+{
+    auto state = this;
+
+    for (int i = 0; i < 9; i++)
+        log << GetRegisterName(i) << ": " << PRINT_VALUE(general[i]) << " ";
+
+    log << std::endl;
+}
+
 // Helper function
 void VMState::Write(uint32_t location, void const* data, size_t count)
 {
@@ -97,13 +150,4 @@ void VMState::LoadBootsector()
     general[8] = 0x7C00;
     memcpy(memory + SEGMEM(segment[1], general[8]), bootsector, 512);
     log << "[INIT] Succesfully loaded bootsector to 0x0000:0x7C00" << std::endl;
-}
-
-void VMState::LogRegisters()
-{
-    VMState* state = this;
-
-    for (int i = 0; i < 9; i++)
-        LOG_STREAM << R_Gn(i) << ": " << PRINT_VALUE(state->general[i]) << " ";
-    LOG_STREAM << std::endl;
 }

@@ -76,13 +76,13 @@ MAKE_OPCODE(89)
     switch (mod.mod)
     {
     case 1:
-        LOG_STREAM << "[" << R_Gn(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
-                   << R_Gn(mod.reg2);
+        LOG_STREAM << "[" << state->GetRegisterName(mod.reg1) << '+' << (int32_t)NEXT_INS(2) << "], "
+                   << state->GetRegisterName(mod.reg2);
         state->Write(SEGMEM(state->ds, state->general[mod.reg1] + (int8_t)NEXT_INS(2)), state->general[mod.reg2]);
         op.ins_offset++;
         break;
     case 3:
-        LOG_STREAM << R_Gn(mod.reg1) << ", " << R_Gn(mod.reg2);
+        LOG_STREAM << state->GetRegisterName(mod.reg1) << ", " << state->GetRegisterName(mod.reg2);
         state->general[mod.reg1] = state->general[mod.reg2];
         break;
     };
@@ -96,12 +96,12 @@ MAKE_OPCODE(8A)
     switch (mod.mod)
     {
     case 0:
-        LOG_STREAM << R_LHn[mod.reg2] << ", [" << R_RCn(mod.reg1) << "]";
+        LOG_STREAM << state->GetByteRegisterName(mod.reg2) << ", [" << state->GetRegisterCombinationName(mod.reg1) << "]";
         GetLHRegister(state, mod.reg2) =
             MEMORY(SEGMEM(state->ds, RegisterCombinationToMemoryAddress(state, mod.reg1)));
         break;
     case 3:
-        LOG_STREAM << R_LHn[mod.reg1] << ", " << R_LHn[mod.reg2];
+        LOG_STREAM << state->GetByteRegisterName(mod.reg1) << ", " << state->GetByteRegisterName(mod.reg2);
         GetLHRegister(state, mod.reg1) = GetLHRegister(state, mod.reg2);
         break;
     };
@@ -124,7 +124,7 @@ MAKE_OPCODE(8E)
     ModRM mod(NEXT_INS(1));
     if (mod.mod == 3)
     {
-        LOG_STREAM << R_Sn[mod.reg2] << ", " << R_Gn(mod.reg1);
+        LOG_STREAM << state->GetSegmentName(mod.reg2) << ", " << state->GetRegisterName(mod.reg1);
         state->segment[mod.reg2] = state->general[mod.reg1];
     }
 }
@@ -174,42 +174,42 @@ MAKE_OPCODE(B7)
 // mov reg, immediate
 MAKE_OPCODE(B8)
 {
-    LOG_STREAM << R_Gn(0) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(0) << ", " << PRINT_VALUE(ARG(1));
     state->eax = ARG(1);
 }
 MAKE_OPCODE(B9)
 {
-    LOG_STREAM << R_Gn(1) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(1) << ", " << PRINT_VALUE(ARG(1));
     state->ecx = ARG(1);
 }
 MAKE_OPCODE(BA)
 {
-    LOG_STREAM << R_Gn(2) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(2) << ", " << PRINT_VALUE(ARG(1));
     state->edx = ARG(1);
 }
 MAKE_OPCODE(BB)
 {
-    LOG_STREAM << R_Gn(3) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(3) << ", " << PRINT_VALUE(ARG(1));
     state->ebx = ARG(1);
 }
 MAKE_OPCODE(BC)
 {
-    LOG_STREAM << R_Gn(4) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(4) << ", " << PRINT_VALUE(ARG(1));
     state->esp = ARG(1);
 }
 MAKE_OPCODE(BD)
 {
-    LOG_STREAM << R_Gn(5) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(5) << ", " << PRINT_VALUE(ARG(1));
     state->ebp = ARG(1);
 }
 MAKE_OPCODE(BE)
 {
-    LOG_STREAM << R_Gn(6) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(6) << ", " << PRINT_VALUE(ARG(1));
     state->esi = ARG(1);
 }
 MAKE_OPCODE(BF)
 {
-    LOG_STREAM << R_Gn(7) << ", " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(7) << ", " << PRINT_VALUE(ARG(1));
     state->edi = ARG(1);
 }
 

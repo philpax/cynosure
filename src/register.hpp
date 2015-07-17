@@ -87,19 +87,6 @@ union ModRM
 
 struct VMState;
 
-static const char* R_Gn16[9] = {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di", "ip"};
-static const char* R_Gn32[9] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi", "eip"};
-
-static const char* R_Sn[6] = {"es", "cs", "ss", "ds", "fs", "gs"};
-static const char* R_LHn[9] = {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
-
-static const char* R_RCn32[8] = {"ebx+esi", "ebx+edi", "ebp+esi", "ebp+edi",
-                                 "esi",     "edi",     "ebp",     "ebx"};
-static const char* R_RCn16[8] = {"bx+si", "bx+di", "bp+si", "bp+di", "si", "di", "bp", "bx"};
-
-#define R_Gn(x) (state->CR0.protectedMode ? R_Gn32[(x)] : R_Gn16[(x)])
-#define R_RCn(x) (state->CR0.protectedMode ? R_RCn32[(x)] : R_RCn16[(x)])
-
 #define MEMORY(x) (state->memory[(x)])
 #define SEGMEM(seg, offset) (((seg)*16) + (offset))
 #define NEXT_INS(i) (MEMORY(state->eip + (i)))

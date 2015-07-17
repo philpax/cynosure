@@ -27,7 +27,7 @@ MAKE_OPCODE(3C)
 // cmp eax, imm32
 MAKE_OPCODE(3D)
 {
-    LOG_STREAM << R_Gn(0) << " " << PRINT_VALUE(ARG(1));
+    LOG_STREAM << state->GetRegisterName(0) << " " << PRINT_VALUE(ARG(1));
     arithmetic::Sub(state, state->eax, ARG(1));
 }
 
