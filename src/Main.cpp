@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     state->eflags.direction = false;
 
     Opcode opcodes[256];
-    opcodesGenerate(opcodes);
+    Opcode::FillTable(opcodes);
 
     state->running = true;
     while (state->running)

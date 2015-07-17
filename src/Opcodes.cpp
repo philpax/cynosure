@@ -29,7 +29,7 @@ uint8_t Opcode::GetFinalOffset(VMState* state)
     return offset;
 }
 
-void opcodesGenerate(Opcode* opcodes)
+void Opcode::FillTable(Opcode* opcodes)
 {
     // add reg, reg
     DECL_OPCODE(0x01, "add ", 2, 2);

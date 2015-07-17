@@ -21,6 +21,8 @@ struct Opcode
     Opcode(Handler func, uint8_t opcode, std::string name, uint8_t offset32, uint8_t offset16);
     uint8_t GetOffset(VMState* state);
     uint8_t GetFinalOffset(VMState* state);
+
+    static void FillTable(Opcode* opcodes);
 };
 
 MAKE_OPCODE(0x00);
@@ -294,5 +296,3 @@ MAKE_OPCODE(0xFC);
 MAKE_OPCODE(0xFD);
 MAKE_OPCODE(0xFE);
 MAKE_OPCODE(0xFF);
-
-void opcodesGenerate(Opcode* opcodes);
