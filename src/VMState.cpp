@@ -4,6 +4,7 @@
 VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memorySize)
     : memorySize(memorySize)
 {
+    // Open log
     log.open(logFilename);
 
     if (!log.is_open())
@@ -11,6 +12,7 @@ VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memor
 
     log << "Cynosure x86 Emulator - compiled " << __DATE__ << " at " << __TIME__ << std::endl;
 
+    // Parse config
     std::fstream config("config.json");
     if (!config.is_open())
         throw std::runtime_error("Failed to open config");
@@ -21,11 +23,13 @@ VMState::VMState(std::string floppyDisk, std::string logFilename, uint32_t memor
     if (!jsonError.empty())
         throw std::runtime_error(jsonError);
 
+    // Open floppy
     floppy.open(floppyDisk, std::ios::in | std::ios::binary);
 
     if (!floppy.is_open())
         throw std::runtime_error("Failed to open floppy");
 
+    // Create and load bootsector into memory
     memory = new uint8_t[memorySize];
     log << "[INIT] Initialized " << memorySize << " KB of memory" << std::endl;
 

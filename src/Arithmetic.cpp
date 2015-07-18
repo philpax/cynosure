@@ -327,7 +327,6 @@ MAKE_OPCODE(0x81)
         {
             Log << state->GetByteRegisterName(mod.reg1);
             value = arithmetic::Add(state, value, immediate);
-            break;
         }
         break;
     case 5:
